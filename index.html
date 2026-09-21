@@ -677,8 +677,8 @@
       border-color: var(--accent);
     }
     .set-check-btn {
-      width: 34px;
-      height: 34px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.15);
@@ -687,7 +687,7 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 16px;
       transition: all 0.2s;
     }
     .set-check-btn.done {
@@ -908,7 +908,7 @@
     </button>
   </nav>
 
-  <!-- MODAL 1: ADD / EDIT WORKOUT (NO EMOJIS) -->
+  <!-- MODAL 1: ADD / EDIT WORKOUT -->
   <div class="modal-overlay" id="editorModal">
     <div class="modal-sheet">
       <div class="drag-handle"></div>
@@ -962,7 +962,7 @@
     </div>
   </div>
 
-  <!-- MODAL 2: LIVE REST TIMER + SET & WEIGHT LOGGER (NO EMOJIS) -->
+  <!-- MODAL 2: LIVE REST TIMER + SET & WEIGHT LOGGER -->
   <div class="modal-overlay" id="sessionModal">
     <div class="modal-sheet">
       <div class="drag-handle"></div>
@@ -995,7 +995,7 @@
     </div>
   </div>
 
-  <!-- MODAL 3: SPLIT CUSTOMIZER (NO EMOJIS) -->
+  <!-- MODAL 3: SPLIT CUSTOMIZER -->
   <div class="modal-overlay" id="planDayModal">
     <div class="modal-sheet">
       <div class="drag-handle"></div>
@@ -1419,26 +1419,36 @@
       document.getElementById('unitsSelect').value = settings.units || 'KG';
     }
 
-    function setupBackdropDismiss(overlayId, modalSheetSelector, closeHandler) {
+    /* -------------------------------------------------------------
+       STRICT MODAL BACKDROP DISMISS LOGIC
+    ------------------------------------------------------------- */
+    function bindOverlayBackdrop(overlayId, closeFn) {
       const overlay = document.getElementById(overlayId);
+      const sheet = overlay.querySelector('.modal-sheet');
+
+      // Prevent ANY event inside the sheet from reaching the backdrop
+      sheet.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+
       overlay.addEventListener('click', (e) => {
         if (e.target === overlay) {
-            closeHnadler();
+          closeFn();
         }
       });
     }
 
-    setupBackdropDismiss('editorModal', '.modal-sheet', () => {
+    bindOverlayBackdrop('editorModal', () => {
       document.getElementById('editorModal').classList.remove('open');
     });
-    setupBackdropDismiss('sessionModal', '.modal-sheet', () => {
+    bindOverlayBackdrop('sessionModal', () => {
       clearInterval(restTimerInterval);
       document.getElementById('sessionModal').classList.remove('open');
     });
-    setupBackdropDismiss('planDayModal', '.modal-sheet', () => {
+    bindOverlayBackdrop('planDayModal', () => {
       document.getElementById('planDayModal').classList.remove('open');
     });
-    setupBackdropDismiss('prModal', '.modal-sheet', () => {
+    bindOverlayBackdrop('prModal', () => {
       document.getElementById('prModal').classList.remove('open');
     });
 
@@ -1559,6 +1569,9 @@
       }
     };
 
+    /* -------------------------------------------------------------
+       SESSION MODAL & DIRECT SET TOGGLING
+    ------------------------------------------------------------- */
     function openSessionModal(workout) {
       activeSessionWorkout = workout;
       document.getElementById('sessionWorkoutTitle').innerText = workout.name;
@@ -1578,41 +1591,62 @@
     function renderSessionSetsTable() {
       const container = document.getElementById('sessionSetsContainer');
       container.innerHTML = '';
+
       sessionSetsData.forEach((setData, i) => {
         const row = document.createElement('div');
         row.className = 'set-row';
-        row.innerHTML = `
-          <div class="set-tag">SET ${i + 1}</div>
-          <div class="set-weight-box">
-            <input type="number" class="weight-input" value="${setData.weight}" onchange="updateSetWeight(${i}, this.value)" />
-            <span style="font-size: 11px; font-weight:700; color:var(--text-dim);">${settings.units}</span>
-          </div>
-          <button class="set-check-btn ${setData.done ? 'done' : ''}" onclick="toggleSetDone(${i}, event)">✓</button>
-        `;
+
+        const tag = document.createElement('div');
+        tag.className = 'set-tag';
+        tag.innerText = `SET ${i + 1}`;
+
+        const weightBox = document.createElement('div');
+        weightBox.className = 'set-weight-box';
+
+        const weightInput = document.createElement('input');
+        weightInput.type = 'number';
+        weightInput.className = 'weight-input';
+        weightInput.value = setData.weight;
+        weightInput.addEventListener('change', (e) => {
+          setData.weight = parseFloat(e.target.value) || 0;
+        });
+
+        const unitLabel = document.createElement('span');
+        unitLabel.style.fontSize = '11px';
+        unitLabel.style.fontWeight = '700';
+        unitLabel.style.color = 'var(--text-dim)';
+        unitLabel.innerText = settings.units;
+
+        weightBox.appendChild(weightInput);
+        weightBox.appendChild(unitLabel);
+
+        const checkBtn = document.createElement('button');
+        checkBtn.type = 'button';
+        checkBtn.className = `set-check-btn ${setData.done ? 'done' : ''}`;
+        checkBtn.innerText = '✓';
+
+        // Direct isolated listener
+        checkBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          setData.done = !setData.done;
+          checkBtn.classList.toggle('done', setData.done);
+
+          if (setData.done) {
+            const wName = activeSessionWorkout.name;
+            if (!personalRecords[wName] || setData.weight > personalRecords[wName]) {
+              personalRecords[wName] = setData.weight;
+              saveState();
+            }
+            startRestCountdown();
+          }
+        });
+
+        row.appendChild(tag);
+        row.appendChild(weightBox);
+        row.appendChild(checkBtn);
         container.appendChild(row);
       });
     }
-
-    window.updateSetWeight = function(idx, val) {
-      const num = parseFloat(val) || 0;
-      sessionSetsData[idx].weight = num;
-    };
-
-    window.toggleSetDone = function(idx) {
-      if (e) e.stopPropagation();
-      sessionSetsData[idx].done = !sessionSetsData[idx].done;
-      renderSessionSetsTable();
-
-      if (sessionSetsData[idx].done) {
-        const wName = activeSessionWorkout.name;
-        const loggedWeight = sessionSetsData[idx].weight;
-        if (!personalRecords[wName] || loggedWeight > personalRecords[wName]) {
-          personalRecords[wName] = loggedWeight;
-          saveState();
-        }
-        startRestCountdown();
-      }
-    };
 
     function startRestCountdown() {
       clearInterval(restTimerInterval);
