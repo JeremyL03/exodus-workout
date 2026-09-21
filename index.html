@@ -3,23 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Exodus — Workout Tracker</title>
+  <title>Exodus</title>
   
-  <!-- iOS PWA meta tags -->
+  <!-- iOS PWA Meta Tags -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Exodus" />
-  <meta name="theme-color" content="#0d0b0e" />
+  <meta name="theme-color" content="#070609" />
 
   <style>
     :root {
-      --bg: #0d0b0e;
-      --card-bg: rgba(255, 255, 255, 0.04);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --accent: #d9324f;
-      --accent-glow: rgba(217, 50, 79, 0.25);
-      --text: #f3f3f5;
-      --text-dim: rgba(255, 255, 255, 0.52);
+      --bg: #070609;
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --card-border: rgba(255, 255, 255, 0.09);
+      --card-highlight: rgba(255, 255, 255, 0.14);
+      --accent: #ff3b5c;
+      --accent-glow: rgba(255, 59, 92, 0.28);
+      --text: #f5f5f7;
+      --text-dim: rgba(235, 235, 245, 0.6);
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
@@ -36,127 +37,132 @@
     body {
       background-color: var(--bg);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
       min-height: 100vh;
       min-height: -webkit-fill-available;
       overflow-x: hidden;
-      padding-top: var(--safe-top);
+      padding-top: calc(var(--safe-top) + 6px);
       padding-bottom: calc(var(--safe-bottom) + 94px);
+      letter-spacing: -0.2px;
     }
 
-    /* Ambient background blooms */
-    .glow-1 {
+    /* Ambient Apple Glass Backdrops */
+    .ambient-glow-1 {
       position: fixed;
-      top: -90px;
+      top: -120px;
       right: -80px;
-      width: 280px;
-      height: 280px;
-      background: rgba(141, 29, 56, 0.22);
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(220, 38, 70, 0.24) 0%, rgba(0,0,0,0) 70%);
       border-radius: 50%;
-      filter: blur(80px);
+      filter: blur(60px);
       pointer-events: none;
       z-index: 0;
     }
-    .glow-2 {
+    .ambient-glow-2 {
       position: fixed;
-      top: 320px;
-      left: -120px;
-      width: 320px;
-      height: 320px;
-      background: rgba(70, 33, 59, 0.16);
+      top: 360px;
+      left: -100px;
+      width: 340px;
+      height: 340px;
+      background: radial-gradient(circle, rgba(120, 28, 65, 0.18) 0%, rgba(0,0,0,0) 70%);
       border-radius: 50%;
-      filter: blur(90px);
+      filter: blur(70px);
       pointer-events: none;
       z-index: 0;
     }
 
     .app-container {
-      max-width: 480px;
+      max-width: 440px;
       margin: 0 auto;
-      padding: 16px 20px;
+      padding: 12px 18px;
       position: relative;
       z-index: 1;
     }
 
-    /* Glass Cards */
-    .glass-card {
+    /* Bubbly Glass Surface */
+    .ios-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border-radius: 20px;
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border-radius: 24px;
       padding: 16px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.36), inset 0 1px 1px var(--card-highlight);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    /* Top Brand Bar */
+    /* Navigation Bar / Brand Header */
     .top-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
     }
     .logo-group {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
     .logo-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), #7a1d36);
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #ff416c, #8a1334);
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 19px;
       box-shadow: 0 4px 16px var(--accent-glow);
     }
-    .logo-text {
-      font-size: 14px;
-      font-weight: 900;
-      letter-spacing: 2.5px;
+    .logo-title {
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
     }
-    .badge {
+    .ios-badge {
       background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 4px 10px;
-      font-size: 11px;
-      font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 5px 11px;
+      font-size: 12px;
+      font-weight: 600;
       color: var(--text-dim);
     }
 
-    /* Progress Banner */
+    /* iOS Progress Ring Banner */
     .progress-banner {
-      background: linear-gradient(135deg, #421822 0%, #1a131a 100%);
+      background: linear-gradient(140deg, rgba(65, 18, 32, 0.65) 0%, rgba(22, 16, 22, 0.65) 100%);
       display: flex;
       align-items: center;
       gap: 16px;
+      border: 1px solid rgba(255, 59, 92, 0.22);
     }
     .progress-circle-wrap {
       position: relative;
-      width: 76px;
-      height: 76px;
+      width: 78px;
+      height: 78px;
       flex-shrink: 0;
     }
     .progress-circle-wrap svg {
       transform: rotate(-90deg);
-      width: 76px;
-      height: 76px;
+      width: 78px;
+      height: 78px;
     }
     .progress-circle-wrap circle {
       fill: none;
-      stroke-width: 6.5;
+      stroke-width: 7;
       stroke-linecap: round;
     }
     .circle-bg {
-      stroke: rgba(255, 255, 255, 0.08);
+      stroke: rgba(255, 255, 255, 0.09);
     }
     .circle-fill {
-      stroke: #f15a67;
-      stroke-dasharray: 213.6;
-      stroke-dashoffset: 213.6;
-      transition: stroke-dashoffset 0.4s ease;
+      stroke: var(--accent);
+      stroke-dasharray: 219.9;
+      stroke-dashoffset: 219.9;
+      transition: stroke-dashoffset 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .progress-inner-text {
       position: absolute;
@@ -167,82 +173,94 @@
       justify-content: center;
     }
     .progress-pct {
-      font-size: 16px;
+      font-size: 17px;
       font-weight: 800;
     }
     .progress-lbl {
       font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
       color: var(--text-dim);
     }
 
-    /* Session Stopwatch Bar */
-    .tracker-bar {
+    /* Apple Stopwatch Island */
+    .stopwatch-island {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 12px 16px;
     }
-    .timer-info {
+    .stopwatch-left {
       display: flex;
       align-items: center;
       gap: 12px;
     }
-    .timer-btn {
-      background: none;
+    .stopwatch-btn {
+      background: rgba(255, 255, 255, 0.08);
       border: none;
       color: var(--accent);
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
+      border-radius: 14px;
+      padding: 6px 12px;
       cursor: pointer;
-      padding: 6px 10px;
+      transition: background 0.15s;
+    }
+    .stopwatch-btn:active {
+      background: rgba(255, 59, 92, 0.2);
     }
 
-    /* Weekday Strip */
+    /* iOS Segmented Day Strip */
     .day-strip {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
-      gap: 8px;
-      margin: 18px 0;
+      gap: 7px;
+      margin: 16px 0 20px;
     }
     .day-pill {
-      background: var(--card-bg);
+      background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 10px 4px;
+      border-radius: 16px;
+      padding: 10px 2px;
       text-align: center;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .day-pill:active {
+      transform: scale(0.94);
     }
     .day-pill.active {
       background: var(--accent);
       border-color: var(--accent);
       transform: translateY(-2px);
-      box-shadow: 0 4px 14px var(--accent-glow);
+      box-shadow: 0 6px 18px var(--accent-glow);
     }
     .day-pill .lbl {
-      font-size: 10px;
-      font-weight: 700;
+      font-size: 11px;
+      font-weight: 600;
       color: var(--text-dim);
     }
     .day-pill.active .lbl {
-      color: #fff;
+      color: rgba(255, 255, 255, 0.85);
     }
     .day-pill .num {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 800;
-      margin-top: 2px;
+      margin-top: 3px;
     }
 
-    /* Section Header */
+    /* Section Subhead */
     .section-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin: 20px 0 10px;
+      align-items: flex-end;
+      margin: 18px 0 10px;
+      padding: 0 4px;
     }
     .section-title {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 800;
+      letter-spacing: -0.4px;
     }
     .reset-btn {
       background: none;
@@ -253,47 +271,71 @@
       cursor: pointer;
     }
 
-    /* Workout List & Order Arrows */
+    /* FLOWING / LIQUID REORDERABLE CARDS */
+    #workoutList {
+      position: relative;
+    }
+
     .workout-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 14px;
+      padding: 14px 16px;
       margin-bottom: 10px;
-      cursor: pointer;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.28);
+      touch-action: pan-y;
+      transition: transform 0.24s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.2s ease, opacity 0.2s ease;
+      cursor: grab;
     }
-    .order-controls {
+
+    .workout-item:active:not(.dragging) {
+      transform: scale(0.98);
+    }
+
+    /* Apple Floating Bubble Drag State */
+    .workout-item.dragging {
+      position: relative;
+      z-index: 999;
+      transform: scale(1.04) rotate(0.8deg);
+      background: rgba(36, 30, 39, 0.88);
+      border: 1px solid rgba(255, 59, 92, 0.45);
+      backdrop-filter: blur(34px) saturate(200%);
+      -webkit-backdrop-filter: blur(34px) saturate(200%);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.7), 0 0 20px var(--accent-glow);
+      cursor: grabbing;
+      opacity: 0.96;
+    }
+
+    .workout-meta {
       display: flex;
-      flex-direction: column;
-      gap: 3px;
-      margin-right: 12px;
-      flex-shrink: 0;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
     }
-    .reorder-btn {
-      background: rgba(255, 255, 255, 0.08);
-      border: none;
-      color: var(--text-dim);
-      border-radius: 6px;
-      width: 26px;
-      height: 22px;
+    .workout-emoji-pill {
+      width: 44px;
+      height: 44px;
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.09);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
-      cursor: pointer;
+      font-size: 22px;
+      flex-shrink: 0;
     }
-    .reorder-btn:active {
-      background: var(--accent);
-      color: white;
-    }
-    .workout-meta {
+    .workout-details {
       flex: 1;
       min-width: 0;
     }
     .workout-name {
       font-size: 15px;
       font-weight: 700;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -308,84 +350,83 @@
       color: var(--text-dim);
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
-    .type-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
+
     .checkbox {
-      width: 24px;
-      height: 24px;
-      border-radius: 7px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
       border: 2px solid rgba(255, 255, 255, 0.25);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       flex-shrink: 0;
-      margin-left: 12px;
-      transition: all 0.2s;
+      margin-left: 10px;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .checkbox.checked {
       background: var(--accent);
       border-color: var(--accent);
+      transform: scale(1.05);
+      box-shadow: 0 2px 10px var(--accent-glow);
     }
     .checkbox svg {
       display: none;
       width: 14px;
       height: 14px;
       stroke: white;
-      stroke-width: 3;
+      stroke-width: 3.2;
       fill: none;
     }
     .checkbox.checked svg {
       display: block;
     }
 
-    /* Floating Add Button */
+    /* iOS Floating Action Button */
     .fab {
       position: fixed;
       right: 20px;
-      bottom: calc(var(--safe-bottom) + 85px);
-      width: 54px;
-      height: 54px;
-      border-radius: 18px;
+      bottom: calc(var(--safe-bottom) + 84px);
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
       background: var(--accent);
       border: none;
       color: white;
       font-size: 28px;
+      font-weight: 400;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 6px 20px var(--accent-glow);
+      box-shadow: 0 8px 24px var(--accent-glow);
       cursor: pointer;
-      z-index: 10;
-      transition: transform 0.15s;
+      z-index: 20;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .fab:active {
-      transform: scale(0.92);
+      transform: scale(0.9);
     }
 
-    /* Bottom Navigation */
+    /* iOS Tab Bar */
     .bottom-nav {
       position: fixed;
       bottom: calc(var(--safe-bottom) + 8px);
       left: 16px;
       right: 16px;
-      max-width: 448px;
+      max-width: 408px;
       margin: 0 auto;
-      background: rgba(30, 26, 32, 0.88);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 26px;
+      background: rgba(22, 19, 25, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(30px) saturate(190%);
+      -webkit-backdrop-filter: blur(30px) saturate(190%);
+      border-radius: 30px;
       display: flex;
       justify-content: space-around;
-      padding: 6px 8px;
-      z-index: 20;
+      padding: 6px 10px;
+      z-index: 30;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
     }
     .nav-tab {
       flex: 1;
@@ -394,21 +435,22 @@
       align-items: center;
       gap: 3px;
       padding: 6px 0;
-      border-radius: 18px;
+      border-radius: 20px;
       background: none;
       border: none;
       color: var(--text-dim);
       font-size: 10px;
       font-weight: 600;
       cursor: pointer;
+      transition: color 0.15s, background 0.15s;
     }
     .nav-tab.active {
-      background: rgba(217, 50, 79, 0.18);
+      background: rgba(255, 59, 92, 0.16);
       color: white;
     }
     .nav-tab svg {
-      width: 20px;
-      height: 20px;
+      width: 21px;
+      height: 21px;
       stroke: currentColor;
       fill: none;
       stroke-width: 2;
@@ -417,42 +459,48 @@
       stroke: var(--accent);
     }
 
-    /* Modal / Backdrop Tap Target */
+    /* Apple Modal Bottom Sheet */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.72);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
+      background: rgba(0, 0, 0, 0.68);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       display: none;
       align-items: flex-end;
       justify-content: center;
       z-index: 100;
+      opacity: 0;
+      transition: opacity 0.2s ease;
     }
     .modal-overlay.open {
       display: flex;
+      opacity: 1;
     }
     .modal-sheet {
       width: 100%;
-      max-width: 480px;
-      background: #1d191f;
-      border-top-left-radius: 28px;
-      border-top-right-radius: 28px;
-      padding: 16px 20px calc(var(--safe-bottom) + 24px);
+      max-width: 440px;
+      background: #19161c;
+      border-top-left-radius: 32px;
+      border-top-right-radius: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-bottom: none;
+      padding: 14px 20px calc(var(--safe-bottom) + 24px);
       max-height: 88vh;
       overflow-y: auto;
-      animation: slideUp 0.22s ease-out;
+      box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.6);
+      animation: iosSlideUp 0.3s cubic-bezier(0.32, 1, 0.23, 1);
     }
-    @keyframes slideUp {
+    @keyframes iosSlideUp {
       from { transform: translateY(100%); }
       to { transform: translateY(0); }
     }
-    .drag-pill {
-      width: 38px;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.2);
+    .drag-handle {
+      width: 36px;
+      height: 4.5px;
+      background: rgba(255, 255, 255, 0.25);
       border-radius: 4px;
-      margin: 0 auto 16px;
+      margin: 0 auto 18px;
     }
     .modal-header {
       display: flex;
@@ -461,47 +509,53 @@
       margin-bottom: 18px;
     }
     .modal-title {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 800;
+      letter-spacing: -0.4px;
     }
 
-    /* Form Fields */
-    .input-field {
+    /* iOS Glass Controls */
+    .ios-input {
       width: 100%;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 12px 14px;
+      border-radius: 16px;
+      padding: 14px 16px;
       color: white;
-      font-size: 14px;
+      font-size: 15px;
       outline: none;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
+      font-family: inherit;
     }
-    .input-field:focus {
+    .ios-input:focus {
       border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(255, 59, 92, 0.25);
     }
+
     .steppers-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 20px;
+      gap: 9px;
+      margin-bottom: 22px;
     }
     .stepper-card {
       background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 14px;
-      padding: 10px 4px;
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 12px 6px;
       text-align: center;
     }
     .stepper-label {
       font-size: 10px;
+      font-weight: 700;
       color: var(--text-dim);
       margin-bottom: 4px;
+      letter-spacing: 0.5px;
     }
     .stepper-val {
-      font-size: 17px;
+      font-size: 19px;
       font-weight: 800;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
     .stepper-btns {
       display: flex;
@@ -509,72 +563,68 @@
       gap: 8px;
     }
     .step-btn {
-      width: 26px;
-      height: 26px;
-      border-radius: 8px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
       background: rgba(255, 255, 255, 0.1);
       border: none;
       color: white;
-      font-size: 16px;
-      font-weight: bold;
+      font-size: 17px;
+      font-weight: 700;
       cursor: pointer;
     }
-    .primary-btn {
+    .step-btn:active {
+      background: var(--accent);
+    }
+
+    .ios-btn-primary {
       width: 100%;
       background: var(--accent);
       color: white;
       border: none;
-      border-radius: 14px;
-      padding: 14px;
-      font-size: 15px;
+      border-radius: 18px;
+      padding: 15px;
+      font-size: 16px;
       font-weight: 700;
       cursor: pointer;
+      box-shadow: 0 6px 20px var(--accent-glow);
     }
-    .secondary-btn {
-      width: 100%;
-      background: rgba(255, 255, 255, 0.08);
-      color: white;
-      border: none;
-      border-radius: 14px;
-      padding: 12px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 10px;
+    .ios-btn-primary:active {
+      transform: scale(0.98);
     }
-    .danger-btn {
+    .ios-btn-danger {
       width: 100%;
-      background: transparent;
-      color: #ff5252;
-      border: 1px solid rgba(255, 82, 82, 0.3);
-      border-radius: 14px;
-      padding: 12px;
+      background: rgba(255, 59, 92, 0.12);
+      color: #ff4569;
+      border: 1px solid rgba(255, 59, 92, 0.25);
+      border-radius: 18px;
+      padding: 13px;
       font-size: 14px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       margin-top: 10px;
     }
 
-    /* Rest Timer Circle */
+    /* Live Rest Timer Ring */
     .rest-circle-wrap {
-      width: 150px;
-      height: 150px;
-      margin: 16px auto;
+      width: 160px;
+      height: 160px;
+      margin: 18px auto;
       position: relative;
     }
     .rest-circle-wrap svg {
-      width: 150px;
-      height: 150px;
+      width: 160px;
+      height: 160px;
       transform: rotate(-90deg);
     }
     .rest-circle-wrap circle {
       fill: none;
-      stroke-width: 8;
+      stroke-width: 9;
       stroke-linecap: round;
     }
     .rest-circle-fill {
       stroke: var(--accent);
-      stroke-dasharray: 414.7;
+      stroke-dasharray: 446.1;
       stroke-dashoffset: 0;
       transition: stroke-dashoffset 1s linear;
     }
@@ -587,8 +637,9 @@
       justify-content: center;
     }
     .rest-timer-sec {
-      font-size: 32px;
+      font-size: 36px;
       font-weight: 800;
+      letter-spacing: -0.6px;
     }
 
     /* Set Checklist Chips */
@@ -596,24 +647,26 @@
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin: 16px 0;
+      margin: 18px 0;
     }
     .set-chip {
       flex: 1 0 calc(25% - 8px);
-      min-width: 64px;
+      min-width: 68px;
       background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 10px 4px;
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 12px 6px;
       text-align: center;
       cursor: pointer;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .set-chip.completed {
-      background: rgba(217, 50, 79, 0.22);
+      background: rgba(255, 59, 92, 0.25);
       border-color: var(--accent);
       color: white;
+      transform: scale(1.02);
     }
 
     .hidden { display: none !important; }
@@ -621,63 +674,59 @@
 </head>
 <body>
 
-  <div class="glow-1"></div>
-  <div class="glow-2"></div>
+  <div class="ambient-glow-1"></div>
+  <div class="ambient-glow-2"></div>
 
   <div class="app-container">
     
-    <!-- Top Brand Bar -->
+    <!-- Header -->
     <header class="top-bar">
       <div class="logo-group">
-        <div class="logo-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 5v14M18 5v14M2 9h4M18 9h4M2 15h4M18 15h4M6 12h12" />
-          </svg>
-        </div>
-        <span class="logo-text">EXODUS</span>
+        <div class="logo-icon">⚡️</div>
+        <span class="logo-title">Exodus</span>
       </div>
-      <div class="badge" id="unitBadge">KG</div>
+      <div class="ios-badge" id="unitBadge">KG</div>
     </header>
 
-    <!-- TAB 1: TODAY / HOME -->
+    <!-- TAB 1: TODAY -->
     <main id="tab-today">
-      <!-- Progress Banner -->
-      <section class="glass-card progress-banner">
+      <!-- Progress Summary -->
+      <section class="ios-card progress-banner">
         <div class="progress-circle-wrap">
           <svg>
-            <circle class="circle-bg" cx="38" cy="38" r="34" />
-            <circle class="circle-fill" id="progressRing" cx="38" cy="38" r="34" />
+            <circle class="circle-bg" cx="39" cy="39" r="35" />
+            <circle class="circle-fill" id="progressRing" cx="39" cy="39" r="35" />
           </svg>
           <div class="progress-inner-text">
             <div class="progress-pct" id="progressPctText">0%</div>
-            <div class="progress-lbl">done</div>
+            <div class="progress-lbl">Done</div>
           </div>
         </div>
         <div>
-          <div style="font-size: 10.5px; font-weight: 800; color: #f67a84; letter-spacing: 1.2px;" id="currentDayFocusLabel">PUSH DAY</div>
-          <div style="font-size: 16px; font-weight: 700; margin: 4px 0;" id="progressFractionText">0 of 0 exercises</div>
-          <div style="font-size: 12px; color: var(--text-dim);" id="progressStatusQuote">Keep your rhythm. You’ve got this.</div>
+          <div style="font-size: 11px; font-weight: 800; color: #ff6e87; letter-spacing: 0.8px;" id="currentDayFocusLabel">PUSH DAY</div>
+          <div style="font-size: 18px; font-weight: 800; margin: 3px 0;" id="progressFractionText">0 of 0 completed</div>
+          <div style="font-size: 12px; color: var(--text-dim);" id="progressStatusQuote">Hold & move cards to organize.</div>
         </div>
       </section>
 
-      <!-- Session Stopwatch -->
-      <section class="glass-card tracker-bar">
-        <div class="timer-info">
-          <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(217, 50, 79, 0.15); display: flex; align-items: center; justify-content: center;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d9324f" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <!-- Stopwatch Bar -->
+      <section class="ios-card stopwatch-island">
+        <div class="stopwatch-left">
+          <div style="width: 38px; height: 38px; border-radius: 12px; background: rgba(255, 59, 92, 0.15); display: flex; align-items: center; justify-content: center; font-size: 18px;">
+            ⏱️
           </div>
           <div>
-            <div style="font-size: 9px; font-weight: 700; color: var(--text-dim); letter-spacing: 1px;">SESSION TIMER</div>
-            <div style="font-size: 18px; font-weight: 800;" id="stopwatchDisplay">00:00</div>
+            <div style="font-size: 10px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.6px;">ACTIVE WORKOUT</div>
+            <div style="font-size: 19px; font-weight: 800;" id="stopwatchDisplay">00:00</div>
           </div>
         </div>
         <div>
-          <button class="timer-btn" id="stopwatchToggleBtn">Start</button>
-          <button class="timer-btn" style="color: var(--text-dim);" id="stopwatchResetBtn">Reset</button>
+          <button class="stopwatch-btn" id="stopwatchToggleBtn">Start</button>
+          <button class="stopwatch-btn" style="color: var(--text-dim);" id="stopwatchResetBtn">Reset</button>
         </div>
       </section>
 
-      <!-- Weekday Selector -->
+      <!-- Day Pills -->
       <nav class="day-strip" id="dayStrip"></nav>
 
       <!-- Routine Header -->
@@ -689,62 +738,62 @@
         <button class="reset-btn" id="resetDayBtn">Reset Day</button>
       </div>
 
-      <!-- Workout Cards List -->
+      <!-- Flowing Workout Card List -->
       <div id="workoutList"></div>
     </main>
 
     <!-- TAB 2: PLAN -->
     <main id="tab-plan" class="hidden">
-      <div class="section-title" style="margin-bottom: 6px;">Weekly Splits</div>
-      <div style="font-size: 13px; color: var(--text-dim); margin-bottom: 16px;">Tap any day to edit its split name, focus, or workouts.</div>
+      <div class="section-title" style="margin-bottom: 6px;">Weekly Schedule</div>
+      <div style="font-size: 13px; color: var(--text-dim); margin-bottom: 16px;">Tap any split to edit its title, muscle focus, or exercises.</div>
       <div id="planList"></div>
     </main>
 
     <!-- TAB 3: INSIGHTS -->
     <main id="tab-insights" class="hidden">
-      <div class="section-title" style="margin-bottom: 14px;">Your Momentum</div>
+      <div class="section-title" style="margin-bottom: 14px;">Activity & Streaks</div>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
-        <div class="glass-card" style="margin-bottom: 0;">
-          <div style="font-size: 22px; font-weight: 800; color: #f07580;" id="totalWorkoutsCompleted">0</div>
-          <div style="font-size: 11px; color: var(--text-dim); margin-top: 4px;">Completed Movements</div>
+        <div class="ios-card" style="margin-bottom: 0;">
+          <div style="font-size: 26px; font-weight: 800; color: #ff6e87;" id="totalWorkoutsCompleted">0</div>
+          <div style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">Completed Moves</div>
         </div>
-        <div class="glass-card" style="margin-bottom: 0;">
-          <div style="font-size: 22px; font-weight: 800; color: #e59a5d;" id="activeDaysCount">5</div>
-          <div style="font-size: 11px; color: var(--text-dim); margin-top: 4px;">Active Split Days</div>
+        <div class="ios-card" style="margin-bottom: 0;">
+          <div style="font-size: 26px; font-weight: 800; color: #ffa06e;" id="activeDaysCount">5</div>
+          <div style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">Active Split Days</div>
         </div>
       </div>
-      <div class="glass-card">
-        <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 1.2px; margin-bottom: 10px;">PROGRESSION ARCHITECTURE</div>
+      <div class="ios-card">
+        <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.8px; margin-bottom: 8px;">NATIVE FEEL</div>
         <div style="font-size: 13px; line-height: 1.6; color: var(--text-dim);">
-          Workouts, personalized sets, reps, and reordered routines are cached directly to local storage. Your data remains fully offline on your device.
+          Equipped with fluid drag-and-drop mechanics, iOS spring dynamics, local cache storage, and zero external tracking.
         </div>
       </div>
     </main>
 
     <!-- TAB 4: SETTINGS -->
     <main id="tab-settings" class="hidden">
-      <div class="section-title" style="margin-bottom: 14px;">Settings</div>
+      <div class="section-title" style="margin-bottom: 14px;">Preferences</div>
       
-      <div class="glass-card">
-        <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 1.2px; margin-bottom: 14px;">PROFILE</div>
-        <input type="text" id="settingProfileName" class="input-field" placeholder="Athlete Name" />
-        <input type="text" id="settingProfileFocus" class="input-field" placeholder="Primary Focus (e.g. Hypertrophy)" />
-        <button class="secondary-btn" style="margin-top: 2px;" id="saveProfileBtn">Save Profile</button>
+      <div class="ios-card">
+        <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.8px; margin-bottom: 12px;">PROFILE IDENTITY</div>
+        <input type="text" id="settingProfileName" class="ios-input" placeholder="Name" />
+        <input type="text" id="settingProfileFocus" class="ios-input" placeholder="Focus (e.g. Strength & Mobility)" />
+        <button class="ios-btn-primary" style="padding: 12px;" id="saveProfileBtn">Save Profile</button>
       </div>
 
-      <div class="glass-card">
-        <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 1.2px; margin-bottom: 14px;">PREFERENCES</div>
+      <div class="ios-card">
+        <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.8px; margin-bottom: 14px;">METRICS</div>
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
           <div>
-            <div style="font-size: 14px; font-weight: 700;">Units</div>
-            <div style="font-size: 11px; color: var(--text-dim);">Select training metrics</div>
+            <div style="font-size: 14px; font-weight: 700;">Weight Units</div>
+            <div style="font-size: 11px; color: var(--text-dim);">Kilograms or Pounds</div>
           </div>
-          <select id="unitsSelect" class="input-field" style="width: 100px; margin-bottom: 0; padding: 6px 10px;">
+          <select id="unitsSelect" class="ios-input" style="width: 95px; margin-bottom: 0; padding: 8px 10px;">
             <option value="KG">KG</option>
             <option value="LB">LB</option>
           </select>
         </div>
-        <button class="danger-btn" id="factoryResetBtn">Reset All Splits to Default</button>
+        <button class="ios-btn-danger" id="factoryResetBtn">Restore Default Exodus Routine</button>
       </div>
     </main>
 
@@ -753,7 +802,7 @@
   <!-- Floating Add Button -->
   <button class="fab" id="fabAddBtn">+</button>
 
-  <!-- Bottom Navigation Bar -->
+  <!-- iOS Bottom Navigation Bar -->
   <nav class="bottom-nav">
     <button class="nav-tab active" data-tab="today">
       <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -773,25 +822,26 @@
     </button>
   </nav>
 
-  <!-- MODAL 1: WORKOUT CREATOR / EDITOR -->
+  <!-- MODAL 1: ADD / EDIT WORKOUT (NO FORM CUES BOX) -->
   <div class="modal-overlay" id="editorModal">
     <div class="modal-sheet">
-      <div class="drag-pill"></div>
+      <div class="drag-handle"></div>
       <div class="modal-header">
         <div class="modal-title" id="editorModalTitle">New Movement</div>
-        <button id="closeEditorBtn" style="background:none; border:none; color:var(--text-dim); font-size:22px; cursor:pointer;">✕</button>
+        <button id="closeEditorBtn" style="background:none; border:none; color:var(--text-dim); font-size:20px; cursor:pointer;">✕</button>
       </div>
-      <input type="text" id="editName" class="input-field" placeholder="Movement Name (e.g. Incline DB Press)" />
-      <input type="text" id="editDef" class="input-field" placeholder="Form cues / Target focus" />
+
+      <input type="text" id="editName" class="ios-input" placeholder="Workout Name (e.g. Incline Bench)" />
       
-      <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 1px; margin-bottom: 8px;">TARGET MUSCLE</div>
-      <select id="editKind" class="input-field">
-        <option value="chest">Chest</option>
-        <option value="back">Back</option>
-        <option value="shoulders">Shoulders</option>
-        <option value="arms">Arms</option>
-        <option value="legs">Legs</option>
-        <option value="core">Core</option>
+      <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.6px; margin-bottom: 8px;">MUSCLE CLASSIFICATION</div>
+      <select id="editKind" class="ios-input">
+        <option value="chest">🫁 Chest</option>
+        <option value="back">🦅 Back</option>
+        <option value="shoulders">🥥 Shoulders</option>
+        <option value="arms">💪 Arms</option>
+        <option value="forearms">✊ Forearms</option>
+        <option value="legs">🦵 Legs</option>
+        <option value="abs">🍫 Abs & Core</option>
       </select>
 
       <div class="steppers-row">
@@ -821,76 +871,76 @@
         </div>
       </div>
 
-      <button class="primary-btn" id="saveWorkoutBtn">Save Routine</button>
-      <button class="danger-btn hidden" id="deleteWorkoutBtn">Delete Routine</button>
+      <button class="ios-btn-primary" id="saveWorkoutBtn">Save Workout</button>
+      <button class="ios-btn-danger hidden" id="deleteWorkoutBtn">Delete Workout</button>
     </div>
   </div>
 
   <!-- MODAL 2: LIVE REST TIMER & SET LOGGING -->
   <div class="modal-overlay" id="sessionModal">
     <div class="modal-sheet">
-      <div class="drag-pill"></div>
+      <div class="drag-handle"></div>
       <div class="modal-header">
         <div>
           <div class="modal-title" id="sessionWorkoutTitle">Incline Press</div>
           <div style="font-size: 12px; color: var(--text-dim);" id="sessionWorkoutSub">4 sets • 10 reps • 90s rest</div>
         </div>
-        <div style="display:flex; align-items:center; gap:8px;">
+        <div style="display:flex; align-items:center; gap:10px;">
           <button id="editFromSessionBtn" style="background:none; border:none; color:var(--text-dim); font-size:18px; cursor:pointer;">✎</button>
-          <button id="closeSessionBtn" style="background:none; border:none; color:var(--text-dim); font-size:22px; cursor:pointer;">✕</button>
+          <button id="closeSessionBtn" style="background:none; border:none; color:var(--text-dim); font-size:20px; cursor:pointer;">✕</button>
         </div>
       </div>
 
       <div class="rest-circle-wrap">
         <svg>
-          <circle class="circle-bg" cx="75" cy="75" r="66" />
-          <circle class="rest-circle-fill" id="restRing" cx="75" cy="75" r="66" />
+          <circle class="circle-bg" cx="80" cy="80" r="71" />
+          <circle class="rest-circle-fill" id="restRing" cx="80" cy="80" r="71" />
         </svg>
         <div class="rest-center-text">
           <div class="rest-timer-sec" id="restTimerDisplay">0s</div>
-          <div style="font-size: 9px; font-weight: 700; color: var(--text-dim); letter-spacing: 1px;">REST TIMER</div>
+          <div style="font-size: 10px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.8px;">REST TIMER</div>
         </div>
       </div>
 
-      <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 1.2px; margin-top: 10px;">TAP TO LOG COMPLETED SETS</div>
+      <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.8px; margin-top: 10px;">TAP SET TO LOG & START REST</div>
       <div class="set-chips" id="sessionSetChips"></div>
 
-      <button class="primary-btn" id="finishSessionBtn">Done & Complete</button>
+      <button class="ios-btn-primary" id="finishSessionBtn">Done & Complete</button>
     </div>
   </div>
 
-  <!-- MODAL 3: DAY PLAN CUSTOMIZER -->
+  <!-- MODAL 3: SPLIT CUSTOMIZER -->
   <div class="modal-overlay" id="planDayModal">
     <div class="modal-sheet">
-      <div class="drag-pill"></div>
+      <div class="drag-handle"></div>
       <div class="modal-header">
         <div class="modal-title" id="planDayModalTitle">Edit Split</div>
-        <button id="closePlanDayBtn" style="background:none; border:none; color:var(--text-dim); font-size:22px; cursor:pointer;">✕</button>
+        <button id="closePlanDayBtn" style="background:none; border:none; color:var(--text-dim); font-size:20px; cursor:pointer;">✕</button>
       </div>
 
-      <input type="text" id="planDayName" class="input-field" placeholder="Split Name (e.g. Upper Body A)" />
-      <input type="text" id="planDayFocus" class="input-field" placeholder="Focus description (e.g. Chest + Lats)" />
+      <input type="text" id="planDayName" class="ios-input" placeholder="Split Name (e.g. Upper Body A)" />
+      <input type="text" id="planDayFocus" class="ios-input" placeholder="Muscle Focus (e.g. Chest + Delts)" />
 
       <div style="display: flex; justify-content: space-between; align-items: center; margin: 16px 0 10px;">
-        <div style="font-size: 12px; font-weight: 700; color: var(--text-dim); letter-spacing: 1px;">SCHEDULED MOVEMENTS</div>
-        <button class="timer-btn" style="padding:0;" id="planDayAddWorkoutBtn">+ Add Movement</button>
+        <div style="font-size: 12px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.6px;">SCHEDULED MOVEMENTS</div>
+        <button class="stopwatch-btn" style="padding:4px 8px;" id="planDayAddWorkoutBtn">+ Add Movement</button>
       </div>
       <div id="planDayWorkoutsList" style="margin-bottom: 16px;"></div>
 
-      <button class="primary-btn" id="savePlanDayBtn">Save Split Changes</button>
+      <button class="ios-btn-primary" id="savePlanDayBtn">Save Changes</button>
     </div>
   </div>
 
   <script>
     // Audio synthesis chime for timer completion
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    function playBeep() {
+    function playChime() {
       try {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'sine';
         osc.frequency.setValueAtTime(880, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.start();
@@ -898,62 +948,69 @@
       } catch (e) {}
     }
 
+    // Muscle Emojis & Labels
+    const EMOJI_MAP = {
+      chest: { emoji: '🫁', label: 'Chest' },
+      back: { emoji: '🦅', label: 'Back' },
+      shoulders: { emoji: '🥥', label: 'Shoulders' },
+      arms: { emoji: '💪', label: 'Arms' },
+      forearms: { emoji: '✊', label: 'Forearms' },
+      legs: { emoji: '🦵', label: 'Legs' },
+      abs: { emoji: '🍫', label: 'Abs & Core' }
+    };
+
     // Default Seed Data
     const DEFAULT_DAYS = [
       {
         name: 'Push', focus: 'Chest + shoulders',
         workouts: [
-          { id: '1', name: 'Incline dumbbell press', kind: 'chest', sets: 4, reps: 10, rest: 90, done: false },
-          { id: '2', name: 'Cable fly', kind: 'chest', sets: 3, reps: 12, rest: 60, done: false },
-          { id: '3', name: 'Overhead press', kind: 'shoulders', sets: 4, reps: 8, rest: 120, done: false },
-          { id: '4', name: 'Lateral raises', kind: 'shoulders', sets: 3, reps: 15, rest: 45, done: false }
+          { id: '1', name: 'Incline Dumbbell Press', kind: 'chest', sets: 4, reps: 10, rest: 90, done: false },
+          { id: '2', name: 'Overhead Shoulder Press', kind: 'shoulders', sets: 4, reps: 8, rest: 120, done: false },
+          { id: '3', name: 'Cable Chest Fly', kind: 'chest', sets: 3, reps: 12, rest: 60, done: false },
+          { id: '4', name: 'Lateral Raises', kind: 'shoulders', sets: 3, reps: 15, rest: 45, done: false }
         ]
       },
       {
         name: 'Pull', focus: 'Back + biceps',
         workouts: [
-          { id: '5', name: 'Lat pulldown', kind: 'back', sets: 4, reps: 10, rest: 90, done: false },
-          { id: '6', name: 'Seated cable row', kind: 'back', sets: 3, reps: 12, rest: 75, done: false },
-          { id: '7', name: 'Face pulls', kind: 'back', sets: 3, reps: 15, rest: 45, done: false },
-          { id: '8', name: 'Incline curls', kind: 'arms', sets: 3, reps: 12, rest: 60, done: false }
+          { id: '5', name: 'Lat Pulldown', kind: 'back', sets: 4, reps: 10, rest: 90, done: false },
+          { id: '6', name: 'Seated Cable Row', kind: 'back', sets: 3, reps: 12, rest: 75, done: false },
+          { id: '7', name: 'Face Pulls', kind: 'shoulders', sets: 3, reps: 15, rest: 45, done: false },
+          { id: '8', name: 'Incline Bicep Curls', kind: 'arms', sets: 3, reps: 12, rest: 60, done: false },
+          { id: '9', name: 'Wrist Curls', kind: 'forearms', sets: 3, reps: 15, rest: 45, done: false }
         ]
       },
       {
         name: 'Legs', focus: 'Quads + hamstrings',
         workouts: [
-          { id: '9', name: 'Back squat', kind: 'legs', sets: 4, reps: 8, rest: 150, done: false },
-          { id: '10', name: 'Romanian deadlift', kind: 'legs', sets: 3, reps: 10, rest: 120, done: false },
-          { id: '11', name: 'Walking lunges', kind: 'legs', sets: 3, reps: 12, rest: 75, done: false }
+          { id: '10', name: 'Back Squat', kind: 'legs', sets: 4, reps: 8, rest: 150, done: false },
+          { id: '11', name: 'Romanian Deadlift', kind: 'legs', sets: 3, reps: 10, rest: 120, done: false },
+          { id: '12', name: 'Walking Lunges', kind: 'legs', sets: 3, reps: 12, rest: 75, done: false }
         ]
       },
       {
         name: 'Core', focus: 'Stability + control',
         workouts: [
-          { id: '12', name: 'Hanging knee raises', kind: 'core', sets: 3, reps: 12, rest: 60, done: false },
-          { id: '13', name: 'Cable crunch', kind: 'core', sets: 3, reps: 15, rest: 45, done: false }
+          { id: '13', name: 'Hanging Knee Raises', kind: 'abs', sets: 3, reps: 12, rest: 60, done: false },
+          { id: '14', name: 'Cable Woodchopper', kind: 'abs', sets: 3, reps: 15, rest: 45, done: false }
         ]
       },
       {
-        name: 'Full body', focus: 'Strength + conditioning',
+        name: 'Full Body', focus: 'Strength + conditioning',
         workouts: [
-          { id: '14', name: 'Kettlebell swings', kind: 'legs', sets: 4, reps: 15, rest: 60, done: false },
-          { id: '15', name: 'Push ups', kind: 'chest', sets: 3, reps: 15, rest: 45, done: false }
+          { id: '15', name: 'Kettlebell Swings', kind: 'legs', sets: 4, reps: 15, rest: 60, done: false },
+          { id: '16', name: 'Standard Push Ups', kind: 'chest', sets: 3, reps: 15, rest: 45, done: false }
         ]
       },
       { name: 'Rest', focus: 'Active recovery', workouts: [] }
     ];
 
-    const TYPE_COLORS = {
-      chest: '#E84357', shoulders: '#9070EE', back: '#C0527B',
-      arms: '#45B5BF', legs: '#EA8648', core: '#B88E4B'
-    };
-
     // State Variables
-    let days = JSON.parse(localStorage.getItem('exodus_days')) || DEFAULT_DAYS;
-    let settings = JSON.parse(localStorage.getItem('exodus_settings')) || {
+    let days = JSON.parse(localStorage.getItem('exodus_days_v2')) || DEFAULT_DAYS;
+    let settings = JSON.parse(localStorage.getItem('exodus_settings_v2')) || {
       units: 'KG',
       name: 'Alex Morgan',
-      focus: 'Strength + hypertrophy'
+      focus: 'Strength & Conditioning'
     };
 
     let selectedDayIdx = (new Date().getDay() + 6) % 7;
@@ -972,8 +1029,8 @@
     let stopwatchTimer = null;
 
     function saveState() {
-      localStorage.setItem('exodus_days', JSON.stringify(days));
-      localStorage.setItem('exodus_settings', JSON.stringify(settings));
+      localStorage.setItem('exodus_days_v2', JSON.stringify(days));
+      localStorage.setItem('exodus_settings_v2', JSON.stringify(settings));
       render();
     }
 
@@ -993,15 +1050,16 @@
       const completed = currentDay.workouts.filter(w => w.done).length;
       const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
 
-      const offset = 213.6 - (213.6 * (pct / 100));
+      // SVG circumference = 2 * PI * 35 = 219.9
+      const offset = 219.9 - (219.9 * (pct / 100));
       document.getElementById('progressRing').style.strokeDashoffset = offset;
       document.getElementById('progressPctText').innerText = `${pct}%`;
-      document.getElementById('progressFractionText').innerText = `${completed} of ${total} exercises`;
-      document.getElementById('currentDayFocusLabel').innerText = `${currentDay.name.toUpperCase()} DAY`;
+      document.getElementById('progressFractionText').innerText = `${completed} of ${total} completed`;
+      document.getElementById('currentDayFocusLabel').innerText = `${currentDay.name.toUpperCase()} SPLIT`;
       document.getElementById('sectionDayTitle').innerText = `${currentDay.name} Routine`;
       document.getElementById('sectionDayFocus').innerText = currentDay.focus;
 
-      const quote = total === 0 ? 'Recovery day. Move gently.' : (pct === 100 ? 'Routines completed! Great work.' : 'Keep your rhythm. You’ve got this.');
+      const quote = total === 0 ? 'Recovery day. Relax & refuel.' : (pct === 100 ? 'Split complete! Solid work.' : 'Hold & move cards to organize.');
       document.getElementById('progressStatusQuote').innerText = quote;
     }
 
@@ -1021,20 +1079,6 @@
       });
     }
 
-    function moveWorkout(dayIdx, workoutIdx, direction, e) {
-      e.stopPropagation();
-      const list = days[dayIdx].workouts;
-      const targetIdx = workoutIdx + direction;
-      if (targetIdx < 0 || targetIdx >= list.length) return;
-      const temp = list[workoutIdx];
-      list[workoutIdx] = list[targetIdx];
-      list[targetIdx] = temp;
-      saveState();
-      if (document.getElementById('planDayModal').classList.contains('open')) {
-        renderPlanDayModalWorkouts();
-      }
-    }
-
     function renderWorkouts() {
       const list = document.getElementById('workoutList');
       list.innerHTML = '';
@@ -1042,28 +1086,34 @@
 
       if (workouts.length === 0) {
         list.innerHTML = `
-          <div class="glass-card" style="text-align: center; padding: 28px 16px;">
-            <div style="font-size: 24px; margin-bottom: 6px;">☕</div>
-            <div style="font-weight: 700;">Rest & Recharge</div>
-            <div style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">No movements scheduled. Tap + to add exercises.</div>
+          <div class="ios-card" style="text-align: center; padding: 32px 16px;">
+            <div style="font-size: 28px; margin-bottom: 8px;">☕️</div>
+            <div style="font-weight: 700; font-size: 16px;">Rest & Recharge</div>
+            <div style="font-size: 13px; color: var(--text-dim); margin-top: 4px;">No movements scheduled. Tap + to add custom sets.</div>
           </div>`;
         return;
       }
 
       workouts.forEach((w, idx) => {
         const card = document.createElement('div');
-        card.className = 'glass-card workout-item';
-        const typeColor = TYPE_COLORS[w.kind] || '#fff';
+        card.className = 'workout-item';
+        card.dataset.index = idx;
+        const meta = EMOJI_MAP[w.kind] || { emoji: '⚡️', label: 'Move' };
+
         card.innerHTML = `
-          <div class="order-controls">
-            <button class="reorder-btn" onclick="moveWorkout(${selectedDayIdx}, ${idx}, -1, event)">▲</button>
-            <button class="reorder-btn" onclick="moveWorkout(${selectedDayIdx}, ${idx}, 1, event)">▼</button>
-          </div>
           <div class="workout-meta">
-            <div class="workout-name ${w.done ? 'done' : ''}">${w.name}</div>
-            <div class="workout-sub">
-              <span class="type-dot" style="background: ${typeColor};"></span>
-              <span>${w.sets} sets • ${w.reps} reps • ${w.rest}s</span>
+            <div class="workout-emoji-pill">${meta.emoji}</div>
+            <div class="workout-details">
+              <div class="workout-name ${w.done ? 'done' : ''}">${w.name}</div>
+              <div class="workout-sub">
+                <span>${meta.label}</span>
+                <span>•</span>
+                <span>${w.sets} sets</span>
+                <span>•</span>
+                <span>${w.reps} reps</span>
+                <span>•</span>
+                <span>${w.rest}s</span>
+              </div>
             </div>
           </div>
           <div class="checkbox ${w.done ? 'checked' : ''}">
@@ -1071,16 +1121,105 @@
           </div>
         `;
 
+        // Checkbox click
         card.querySelector('.checkbox').onclick = (e) => {
           e.stopPropagation();
           w.done = !w.done;
           saveState();
         };
 
-        card.onclick = () => openSessionModal(w);
+        // Tap opens live timer / sets
+        card.onclick = (e) => {
+          if (card.classList.contains('dragging')) return;
+          openSessionModal(w);
+        };
+
+        // Attach Apple Flowing Drag Handlers
+        attachFluidReorder(card, list, selectedDayIdx);
 
         list.appendChild(card);
       });
+    }
+
+    /* -------------------------------------------------------------
+       APPLE LIQUID / FLOW-ISH TOUCH & DRAG REORDERING
+    ------------------------------------------------------------- */
+    function attachFluidReorder(card, container, dayIndex) {
+      let isDragging = false;
+      let startY = 0;
+      let curY = 0;
+      let initialTop = 0;
+      let touchTimeout = null;
+
+      const onTouchStart = (e) => {
+        const touch = e.touches ? e.touches[0] : e;
+        startY = touch.clientY;
+        const rect = card.getBoundingClientRect();
+        initialTop = rect.top;
+
+        // Long-press detection to distinguish drag from tap
+        touchTimeout = setTimeout(() => {
+          isDragging = true;
+          card.classList.add('dragging');
+          if (navigator.vibrate) navigator.vibrate(25);
+        }, 180);
+      };
+
+      const onTouchMove = (e) => {
+        const touch = e.touches ? e.touches[0] : e;
+        const deltaY = touch.clientY - startY;
+
+        if (!isDragging) {
+          if (Math.abs(deltaY) > 8) clearTimeout(touchTimeout);
+          return;
+        }
+
+        e.preventDefault();
+        curY = touch.clientY;
+        card.style.transform = `translateY(${deltaY}px) scale(1.04) rotate(0.8deg)`;
+
+        // Identify card directly underneath
+        const siblings = [...container.querySelectorAll('.workout-item:not(.dragging)')];
+        siblings.forEach(sibling => {
+          const sRect = sibling.getBoundingClientRect();
+          const sCenter = sRect.top + sRect.height / 2;
+          if (curY > sRect.top && curY < sRect.bottom) {
+            if (curY < sCenter) {
+              container.insertBefore(card, sibling);
+            } else {
+              container.insertBefore(card, sibling.nextSibling);
+            }
+          }
+        });
+      };
+
+      const onTouchEnd = () => {
+        clearTimeout(touchTimeout);
+        if (!isDragging) return;
+        isDragging = false;
+        card.classList.remove('dragging');
+        card.style.transform = '';
+
+        // Reconstruct items in local memory based on DOM order
+        const reordered = [];
+        container.querySelectorAll('.workout-item').forEach(item => {
+          const idx = parseInt(item.dataset.index, 10);
+          reordered.push(days[dayIndex].workouts[idx]);
+        });
+        days[dayIndex].workouts = reordered;
+        saveState();
+      };
+
+      // Pointer / Touch bindings
+      card.addEventListener('touchstart', onTouchStart, { passive: true });
+      card.addEventListener('touchmove', onTouchMove, { passive: false });
+      card.addEventListener('touchend', onTouchEnd);
+      card.addEventListener('touchcancel', onTouchEnd);
+
+      // Mouse desktop support
+      card.addEventListener('mousedown', onTouchStart);
+      window.addEventListener('mousemove', onTouchMove);
+      window.addEventListener('mouseup', onTouchEnd);
     }
 
     function renderPlan() {
@@ -1088,19 +1227,19 @@
       container.innerHTML = '';
       days.forEach((day, idx) => {
         const item = document.createElement('div');
-        item.className = 'glass-card';
+        item.className = 'ios-card';
         item.style.display = 'flex';
         item.style.alignItems = 'center';
         item.style.justifyContent = 'space-between';
         item.style.cursor = 'pointer';
         item.innerHTML = `
           <div>
-            <div style="font-weight: 700; font-size: 15px;">${day.name}</div>
-            <div style="font-size: 12px; color: var(--text-dim);">${day.focus}</div>
+            <div style="font-weight: 700; font-size: 16px;">${day.name}</div>
+            <div style="font-size: 13px; color: var(--text-dim); margin-top: 2px;">${day.focus}</div>
           </div>
           <div style="display:flex; align-items:center; gap:8px;">
             <div style="font-size: 13px; font-weight: 700; color: var(--text-dim);">${day.workouts.length} exercises</div>
-            <div style="font-size: 16px; color: var(--text-dim);">›</div>
+            <div style="font-size: 18px; color: var(--text-dim);">›</div>
           </div>
         `;
         item.onclick = () => openPlanDayModal(idx);
@@ -1121,7 +1260,7 @@
       document.getElementById('unitsSelect').value = settings.units || 'KG';
     }
 
-    // Modal Background Tapping (Dismiss on click outside)
+    // Modal Background Tap-to-Dismiss
     function setupBackdropDismiss(overlayId, modalSheetSelector, closeHandler) {
       const overlay = document.getElementById(overlayId);
       overlay.addEventListener('click', (e) => {
@@ -1181,7 +1320,7 @@
       stopwatchToggleBtn.innerText = 'Start';
     };
 
-    // Editor Stepper Values
+    // Steppers Logic
     let curSets = 3, curReps = 10, curRest = 90;
     window.stepVal = function(field, delta) {
       if (field === 'Sets') curSets = Math.max(1, curSets + delta);
@@ -1197,16 +1336,14 @@
       activeEditDayIdx = dayIdx;
 
       if (workout) {
-        document.getElementById('editorModalTitle').innerText = 'Edit Movement';
+        document.getElementById('editorModalTitle').innerText = 'Edit Workout';
         document.getElementById('editName').value = workout.name;
-        document.getElementById('editDef').value = workout.definition || '';
         document.getElementById('editKind').value = workout.kind || 'chest';
         curSets = workout.sets; curReps = workout.reps; curRest = workout.rest;
         document.getElementById('deleteWorkoutBtn').classList.remove('hidden');
       } else {
-        document.getElementById('editorModalTitle').innerText = 'New Movement';
+        document.getElementById('editorModalTitle').innerText = 'New Workout';
         document.getElementById('editName').value = '';
-        document.getElementById('editDef').value = '';
         document.getElementById('editKind').value = 'chest';
         curSets = 3; curReps = 10; curRest = 90;
         document.getElementById('deleteWorkoutBtn').classList.add('hidden');
@@ -1224,12 +1361,10 @@
     document.getElementById('saveWorkoutBtn').onclick = () => {
       const name = document.getElementById('editName').value.trim();
       if (!name) return;
-      const def = document.getElementById('editDef').value.trim();
       const kind = document.getElementById('editKind').value;
 
       if (activeEditWorkout) {
         activeEditWorkout.name = name;
-        activeEditWorkout.definition = def;
         activeEditWorkout.kind = kind;
         activeEditWorkout.sets = curSets;
         activeEditWorkout.reps = curReps;
@@ -1237,7 +1372,7 @@
       } else {
         days[activeEditDayIdx].workouts.push({
           id: String(Date.now()),
-          name, definition: def, kind,
+          name, kind,
           sets: curSets, reps: curReps, rest: curRest, done: false
         });
       }
@@ -1262,7 +1397,8 @@
     // Live Workout Session & Rest Countdown
     function openSessionModal(workout) {
       activeSessionWorkout = workout;
-      document.getElementById('sessionWorkoutTitle').innerText = workout.name;
+      const meta = EMOJI_MAP[workout.kind] || { emoji: '⚡️', label: 'Move' };
+      document.getElementById('sessionWorkoutTitle').innerText = `${meta.emoji} ${workout.name}`;
       document.getElementById('sessionWorkoutSub').innerText = `${workout.sets} sets • ${workout.reps} reps • ${workout.rest}s rest`;
 
       sessionSetsState = Array(workout.sets).fill(false);
@@ -1302,15 +1438,16 @@
       const totalRest = activeSessionWorkout.rest;
       const ring = document.getElementById('restRing');
 
+      // Circumference = 2 * PI * 71 = 446.1
       restTimerInterval = setInterval(() => {
         restRemaining--;
         document.getElementById('restTimerDisplay').innerText = `${restRemaining}s`;
-        const offset = 414.7 - (414.7 * (restRemaining / totalRest));
+        const offset = 446.1 - (446.1 * (restRemaining / totalRest));
         ring.style.strokeDashoffset = offset;
 
         if (restRemaining <= 0) {
           clearInterval(restTimerInterval);
-          playBeep();
+          playChime();
         }
       }, 1000);
     }
@@ -1334,7 +1471,7 @@
       saveState();
     };
 
-    // Day Plan Customizer
+    // Plan Day Customizer
     let currentEditingPlanDayIndex = 0;
     function openPlanDayModal(idx) {
       currentEditingPlanDayIndex = idx;
@@ -1351,30 +1488,27 @@
       const workouts = days[currentEditingPlanDayIndex].workouts;
 
       if (workouts.length === 0) {
-        container.innerHTML = `<div style="font-size:12px; color:var(--text-dim); text-align:center; padding:12px;">No exercises in this split yet.</div>`;
+        container.innerHTML = `<div style="font-size:13px; color:var(--text-dim); text-align:center; padding:14px;">No exercises in this split yet.</div>`;
         return;
       }
 
       workouts.forEach((w, wIdx) => {
         const row = document.createElement('div');
+        const meta = EMOJI_MAP[w.kind] || { emoji: '⚡️' };
         row.style.display = 'flex';
         row.style.alignItems = 'center';
         row.style.justifyContent = 'space-between';
-        row.style.padding = '8px 10px';
-        row.style.background = 'rgba(255,255,255,0.03)';
-        row.style.border = '1px solid rgba(255,255,255,0.06)';
-        row.style.borderRadius = '10px';
-        row.style.marginBottom = '6px';
+        row.style.padding = '10px 14px';
+        row.style.background = 'rgba(255,255,255,0.04)';
+        row.style.border = '1px solid rgba(255,255,255,0.08)';
+        row.style.borderRadius = '16px';
+        row.style.marginBottom = '8px';
         row.innerHTML = `
-          <div class="order-controls" style="margin-right:8px;">
-            <button class="reorder-btn" onclick="moveWorkout(${currentEditingPlanDayIndex}, ${wIdx}, -1, event)">▲</button>
-            <button class="reorder-btn" onclick="moveWorkout(${currentEditingPlanDayIndex}, ${wIdx}, 1, event)">▼</button>
-          </div>
           <div style="flex:1; cursor:pointer;" onclick="openWorkoutEditor(days[${currentEditingPlanDayIndex}].workouts[${wIdx}], ${currentEditingPlanDayIndex})">
-            <div style="font-size:14px; font-weight:700;">${w.name}</div>
-            <div style="font-size:11px; color:var(--text-dim);">${w.sets} sets • ${w.reps} reps • ${w.rest}s</div>
+            <div style="font-size:15px; font-weight:700;">${meta.emoji} ${w.name}</div>
+            <div style="font-size:12px; color:var(--text-dim); margin-top:2px;">${w.sets} sets • ${w.reps} reps • ${w.rest}s</div>
           </div>
-          <button style="background:none; border:none; color:#ff5252; font-size:16px; cursor:pointer; padding:6px;" onclick="removeWorkoutFromPlan(${wIdx})">✕</button>
+          <button style="background:none; border:none; color:#ff4569; font-size:17px; cursor:pointer; padding:6px;" onclick="removeWorkoutFromPlan(${wIdx})">✕</button>
         `;
         container.appendChild(row);
       });
@@ -1417,13 +1551,13 @@
     };
 
     document.getElementById('factoryResetBtn').onclick = () => {
-      if (confirm('Reset all workout splits back to default? All customizations will be reset.')) {
+      if (confirm('Restore Exodus default routine? Custom changes will be cleared.')) {
         days = JSON.parse(JSON.stringify(DEFAULT_DAYS));
         saveState();
       }
     };
 
-    // Initial load
+    // Initial Load
     render();
   </script>
 </body>
