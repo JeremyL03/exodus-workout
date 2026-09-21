@@ -352,6 +352,15 @@
       text-decoration: line-through;
       color: rgba(255, 255, 255, 0.35);
     }
+    .superset-tag {
+      font-size: 12px;
+      color: #ff6e87;
+      font-weight: 600;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
     .workout-sub {
       font-size: 12px;
       color: var(--text-dim);
@@ -528,6 +537,14 @@
       box-shadow: 0 0 0 3px rgba(255, 59, 92, 0.25);
     }
 
+    .superset-container {
+      background: rgba(255, 59, 92, 0.06);
+      border: 1px solid rgba(255, 59, 92, 0.2);
+      border-radius: 18px;
+      padding: 12px 14px;
+      margin-bottom: 18px;
+    }
+
     .steppers-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -649,12 +666,21 @@
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--card-border);
       border-radius: 16px;
-      padding: 8px 12px;
+      padding: 10px 12px;
+    }
+    .set-info-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
     }
     .set-tag {
       font-size: 13px;
       font-weight: 700;
-      width: 48px;
+    }
+    .set-superset-desc {
+      font-size: 11px;
+      color: #ff6e87;
+      font-weight: 600;
     }
     .set-weight-box {
       display: flex;
@@ -908,7 +934,7 @@
     </button>
   </nav>
 
-  <!-- MODAL 1: ADD / EDIT WORKOUT -->
+  <!-- MODAL 1: ADD / EDIT WORKOUT (WITH SUPER SETS) -->
   <div class="modal-overlay" id="editorModal">
     <div class="modal-sheet">
       <div class="drag-handle"></div>
@@ -917,7 +943,7 @@
         <button id="closeEditorBtn" style="background:none; border:none; color:var(--text-dim); font-size:20px; cursor:pointer;">✕</button>
       </div>
 
-      <input type="text" id="editName" class="ios-input" placeholder="Workout Name (e.g. Incline Bench)" />
+      <input type="text" id="editName" class="ios-input" placeholder="Main Movement (e.g. Hanging Knee Raises)" />
       
       <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.6px; margin-bottom: 8px;">TARGET MUSCLE GROUP</div>
       <select id="editKind" class="ios-input">
@@ -929,6 +955,13 @@
         <option value="legs">Legs (Quads / Hams)</option>
         <option value="abs">Abs & Core</option>
       </select>
+
+      <!-- Super Set Pairing Container -->
+      <div class="superset-container">
+        <div style="font-size: 11px; font-weight: 700; color: #ff6e87; letter-spacing: 0.8px; margin-bottom: 8px;">OPTIONAL SUPER SET</div>
+        <input type="text" id="editSuperName" class="ios-input" placeholder="Super Set Exercise (e.g. Crunches)" style="margin-bottom: 8px;" />
+        <input type="number" id="editSuperReps" class="ios-input" placeholder="Super Set Reps (e.g. 15)" style="margin-bottom: 0;" />
+      </div>
 
       <div class="steppers-row">
         <div class="stepper-card">
@@ -970,6 +1003,7 @@
         <div>
           <div class="modal-title" id="sessionWorkoutTitle">Incline Press</div>
           <div style="font-size: 12px; color: var(--text-dim);" id="sessionWorkoutSub">4 sets • 10 reps • 90s rest</div>
+          <div id="sessionWorkoutSuperSub" style="font-size: 12px; color: #ff6e87; font-weight: 600; margin-top: 2px;"></div>
         </div>
         <div style="display:flex; align-items:center; gap:10px;">
           <button id="editFromSessionBtn" style="background:none; border:none; color:var(--text-dim); font-size:18px; cursor:pointer;">✎</button>
@@ -1087,7 +1121,7 @@
       {
         name: 'Core', focus: 'Stability + control',
         workouts: [
-          { id: '13', name: 'Hanging Knee Raises', kind: 'abs', sets: 3, reps: 12, rest: 60, done: false },
+          { id: '13', name: 'Hanging Knee Raises', kind: 'abs', sets: 3, reps: 12, rest: 60, done: false, superName: 'Crunches', superReps: 15 },
           { id: '14', name: 'Cable Woodchopper', kind: 'abs', sets: 3, reps: 15, rest: 45, done: false }
         ]
       },
@@ -1101,14 +1135,14 @@
       { name: 'Rest', focus: 'Active recovery', workouts: [] }
     ];
 
-    let days = JSON.parse(localStorage.getItem('exodus_days_v4')) || DEFAULT_DAYS;
-    let settings = JSON.parse(localStorage.getItem('exodus_settings_v4')) || {
+    let days = JSON.parse(localStorage.getItem('exodus_days_v5')) || DEFAULT_DAYS;
+    let settings = JSON.parse(localStorage.getItem('exodus_settings_v5')) || {
       units: 'KG',
       name: 'Alex Morgan',
       focus: 'Strength & Conditioning'
     };
-    let historyLogs = JSON.parse(localStorage.getItem('exodus_history_v4')) || {};
-    let personalRecords = JSON.parse(localStorage.getItem('exodus_prs_v4')) || {};
+    let historyLogs = JSON.parse(localStorage.getItem('exodus_history_v5')) || {};
+    let personalRecords = JSON.parse(localStorage.getItem('exodus_prs_v5')) || {};
 
     let selectedDayIdx = (new Date().getDay() + 6) % 7;
     if (selectedDayIdx > 5) selectedDayIdx = 0;
@@ -1125,10 +1159,10 @@
     let stopwatchTimer = null;
 
     function saveState() {
-      localStorage.setItem('exodus_days_v4', JSON.stringify(days));
-      localStorage.setItem('exodus_settings_v4', JSON.stringify(settings));
-      localStorage.setItem('exodus_history_v4', JSON.stringify(historyLogs));
-      localStorage.setItem('exodus_prs_v4', JSON.stringify(personalRecords));
+      localStorage.setItem('exodus_days_v5', JSON.stringify(days));
+      localStorage.setItem('exodus_settings_v5', JSON.stringify(settings));
+      localStorage.setItem('exodus_history_v5', JSON.stringify(historyLogs));
+      localStorage.setItem('exodus_prs_v5', JSON.stringify(personalRecords));
       render();
     }
 
@@ -1202,6 +1236,10 @@
         card.dataset.index = idx;
         const categoryLabel = LABEL_MAP[w.kind] || 'Move';
 
+        const superSetMarkup = w.superName ? `
+          <div class="superset-tag">↳ Super Set: ${w.superName} (${w.superReps || 10} reps)</div>
+        ` : '';
+
         card.innerHTML = `
           <div class="workout-meta">
             <div class="workout-bullet-pill">
@@ -1209,6 +1247,7 @@
             </div>
             <div class="workout-details">
               <div class="workout-name ${w.done ? 'done' : ''}">${w.name}</div>
+              ${superSetMarkup}
               <div class="workout-sub">
                 <span>${categoryLabel}</span>
                 <span>•</span>
@@ -1419,14 +1458,10 @@
       document.getElementById('unitsSelect').value = settings.units || 'KG';
     }
 
-    /* -------------------------------------------------------------
-       STRICT MODAL BACKDROP DISMISS LOGIC
-    ------------------------------------------------------------- */
     function bindOverlayBackdrop(overlayId, closeFn) {
       const overlay = document.getElementById(overlayId);
       const sheet = overlay.querySelector('.modal-sheet');
 
-      // Prevent ANY event inside the sheet from reaching the backdrop
       sheet.addEventListener('click', (e) => {
         e.stopPropagation();
       });
@@ -1514,12 +1549,16 @@
         document.getElementById('editorModalTitle').innerText = 'Edit Movement';
         document.getElementById('editName').value = workout.name;
         document.getElementById('editKind').value = workout.kind || 'chest';
+        document.getElementById('editSuperName').value = workout.superName || '';
+        document.getElementById('editSuperReps').value = workout.superReps || '';
         curSets = workout.sets; curReps = workout.reps; curRest = workout.rest;
         document.getElementById('deleteWorkoutBtn').classList.remove('hidden');
       } else {
         document.getElementById('editorModalTitle').innerText = 'New Movement';
         document.getElementById('editName').value = '';
         document.getElementById('editKind').value = 'chest';
+        document.getElementById('editSuperName').value = '';
+        document.getElementById('editSuperReps').value = '';
         curSets = 3; curReps = 10; curRest = 90;
         document.getElementById('deleteWorkoutBtn').classList.add('hidden');
       }
@@ -1537,6 +1576,8 @@
       const name = document.getElementById('editName').value.trim();
       if (!name) return;
       const kind = document.getElementById('editKind').value;
+      const superName = document.getElementById('editSuperName').value.trim();
+      const superReps = parseInt(document.getElementById('editSuperReps').value, 10) || null;
 
       if (activeEditWorkout) {
         activeEditWorkout.name = name;
@@ -1544,11 +1585,15 @@
         activeEditWorkout.sets = curSets;
         activeEditWorkout.reps = curReps;
         activeEditWorkout.rest = curRest;
+        activeEditWorkout.superName = superName || undefined;
+        activeEditWorkout.superReps = superReps || undefined;
       } else {
         days[activeEditDayIdx].workouts.push({
           id: String(Date.now()),
           name, kind,
-          sets: curSets, reps: curReps, rest: curRest, done: false
+          sets: curSets, reps: curReps, rest: curRest, done: false,
+          superName: superName || undefined,
+          superReps: superReps || undefined
         });
       }
 
@@ -1569,13 +1614,18 @@
       }
     };
 
-    /* -------------------------------------------------------------
-       SESSION MODAL & DIRECT SET TOGGLING
-    ------------------------------------------------------------- */
     function openSessionModal(workout) {
       activeSessionWorkout = workout;
       document.getElementById('sessionWorkoutTitle').innerText = workout.name;
       document.getElementById('sessionWorkoutSub').innerText = `${workout.sets} sets • ${workout.reps} reps • ${workout.rest}s rest`;
+      
+      const superSub = document.getElementById('sessionWorkoutSuperSub');
+      if (workout.superName) {
+        superSub.innerText = `↳ Super Set: ${workout.superName} (${workout.superReps || 10} reps)`;
+        superSub.style.display = 'block';
+      } else {
+        superSub.style.display = 'none';
+      }
 
       const prevWeight = personalRecords[workout.name] || 20;
       sessionSetsData = Array(workout.sets).fill(null).map(() => ({ done: false, weight: prevWeight }));
@@ -1596,9 +1646,20 @@
         const row = document.createElement('div');
         row.className = 'set-row';
 
+        const infoBox = document.createElement('div');
+        infoBox.className = 'set-info-left';
+
         const tag = document.createElement('div');
         tag.className = 'set-tag';
         tag.innerText = `SET ${i + 1}`;
+        infoBox.appendChild(tag);
+
+        if (activeSessionWorkout.superName) {
+          const superDesc = document.createElement('div');
+          superDesc.className = 'set-superset-desc';
+          superDesc.innerText = `+ ${activeSessionWorkout.superReps || 10} reps ${activeSessionWorkout.superName}`;
+          infoBox.appendChild(superDesc);
+        }
 
         const weightBox = document.createElement('div');
         weightBox.className = 'set-weight-box';
@@ -1625,7 +1686,6 @@
         checkBtn.className = `set-check-btn ${setData.done ? 'done' : ''}`;
         checkBtn.innerText = '✓';
 
-        // Direct isolated listener
         checkBtn.addEventListener('click', (e) => {
           e.stopPropagation();
           setData.done = !setData.done;
@@ -1641,7 +1701,7 @@
           }
         });
 
-        row.appendChild(tag);
+        row.appendChild(infoBox);
         row.appendChild(weightBox);
         row.appendChild(checkBtn);
         container.appendChild(row);
@@ -1754,10 +1814,13 @@
         row.style.border = '1px solid rgba(255,255,255,0.08)';
         row.style.borderRadius = '16px';
         row.style.marginBottom = '8px';
+
+        const superSubtitle = w.superName ? ` • Super Set: ${w.superName} (${w.superReps || 10} reps)` : '';
+
         row.innerHTML = `
           <div style="flex:1; cursor:pointer;" onclick="openWorkoutEditor(days[${currentEditingPlanDayIndex}].workouts[${wIdx}], ${currentEditingPlanDayIndex})">
             <div style="font-size:15px; font-weight:700;">${w.name}</div>
-            <div style="font-size:12px; color:var(--text-dim); margin-top:2px;">${w.sets} sets • ${w.reps} reps • ${w.rest}s</div>
+            <div style="font-size:12px; color:var(--text-dim); margin-top:2px;">${w.sets} sets • ${w.reps} reps${superSubtitle}</div>
           </div>
           <button style="background:none; border:none; color:#ff4569; font-size:17px; cursor:pointer; padding:6px;" onclick="removeWorkoutFromPlan(${wIdx})">✕</button>
         `;
