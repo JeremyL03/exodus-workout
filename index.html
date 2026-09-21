@@ -46,7 +46,6 @@
       letter-spacing: -0.2px;
     }
 
-    /* Ambient Apple Glass Backdrops */
     .ambient-glow-1 {
       position: fixed;
       top: -120px;
@@ -80,7 +79,6 @@
       z-index: 1;
     }
 
-    /* Bubbly Glass Surface */
     .ios-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -90,15 +88,13 @@
       padding: 16px;
       margin-bottom: 12px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.36), inset 0 1px 1px var(--card-highlight);
-      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    /* Navigation Bar / Brand Header */
     .top-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
     .logo-group {
       display: flex;
@@ -121,17 +117,37 @@
       font-weight: 800;
       letter-spacing: -0.4px;
     }
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pr-pill-btn {
+      background: rgba(255, 59, 92, 0.16);
+      border: 1px solid rgba(255, 59, 92, 0.35);
+      color: #ff6e87;
+      border-radius: 14px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .pr-pill-btn:active {
+      transform: scale(0.95);
+    }
     .ios-badge {
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 14px;
-      padding: 5px 11px;
+      padding: 5px 10px;
       font-size: 12px;
       font-weight: 600;
       color: var(--text-dim);
     }
 
-    /* iOS Progress Ring Banner */
     .progress-banner {
       background: linear-gradient(140deg, rgba(65, 18, 32, 0.65) 0%, rgba(22, 16, 22, 0.65) 100%);
       display: flex;
@@ -183,7 +199,6 @@
       color: var(--text-dim);
     }
 
-    /* Apple Stopwatch Island */
     .stopwatch-island {
       display: flex;
       align-items: center;
@@ -204,13 +219,11 @@
       border-radius: 14px;
       padding: 6px 12px;
       cursor: pointer;
-      transition: background 0.15s;
     }
     .stopwatch-btn:active {
       background: rgba(255, 59, 92, 0.2);
     }
 
-    /* iOS Segmented Day Strip */
     .day-strip {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
@@ -249,7 +262,6 @@
       margin-top: 3px;
     }
 
-    /* Section Subhead */
     .section-header {
       display: flex;
       justify-content: space-between;
@@ -271,11 +283,10 @@
       cursor: pointer;
     }
 
-    /* FLOWING / LIQUID REORDERABLE CARDS */
+    /* REORDERABLE ITEMS */
     #workoutList {
       position: relative;
     }
-
     .workout-item {
       display: flex;
       align-items: center;
@@ -290,25 +301,16 @@
       transition: transform 0.24s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.2s ease, opacity 0.2s ease;
       cursor: grab;
     }
-
-    .workout-item:active:not(.dragging) {
-      transform: scale(0.98);
-    }
-
-    /* Apple Floating Bubble Drag State */
     .workout-item.dragging {
       position: relative;
       z-index: 999;
       transform: scale(1.04) rotate(0.8deg);
-      background: rgba(36, 30, 39, 0.88);
+      background: rgba(36, 30, 39, 0.92);
       border: 1px solid rgba(255, 59, 92, 0.45);
-      backdrop-filter: blur(34px) saturate(200%);
-      -webkit-backdrop-filter: blur(34px) saturate(200%);
+      backdrop-filter: blur(34px);
       box-shadow: 0 20px 48px rgba(0, 0, 0, 0.7), 0 0 20px var(--accent-glow);
       cursor: grabbing;
-      opacity: 0.96;
     }
-
     .workout-meta {
       display: flex;
       align-items: center;
@@ -352,7 +354,6 @@
       align-items: center;
       gap: 5px;
     }
-
     .checkbox {
       width: 26px;
       height: 26px;
@@ -384,7 +385,6 @@
       display: block;
     }
 
-    /* iOS Floating Action Button */
     .fab {
       position: fixed;
       right: 20px;
@@ -396,20 +396,18 @@
       border: none;
       color: white;
       font-size: 28px;
-      font-weight: 400;
       display: flex;
       align-items: center;
       justify-content: center;
       box-shadow: 0 8px 24px var(--accent-glow);
       cursor: pointer;
       z-index: 20;
-      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: transform 0.2s;
     }
     .fab:active {
       transform: scale(0.9);
     }
 
-    /* iOS Tab Bar */
     .bottom-nav {
       position: fixed;
       bottom: calc(var(--safe-bottom) + 8px);
@@ -419,8 +417,7 @@
       margin: 0 auto;
       background: rgba(22, 19, 25, 0.8);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(30px) saturate(190%);
-      -webkit-backdrop-filter: blur(30px) saturate(190%);
+      backdrop-filter: blur(30px);
       border-radius: 30px;
       display: flex;
       justify-content: space-around;
@@ -442,7 +439,6 @@
       font-size: 10px;
       font-weight: 600;
       cursor: pointer;
-      transition: color 0.15s, background 0.15s;
     }
     .nav-tab.active {
       background: rgba(255, 59, 92, 0.16);
@@ -459,7 +455,7 @@
       stroke: var(--accent);
     }
 
-    /* Apple Modal Bottom Sheet */
+    /* Modals */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -470,12 +466,9 @@
       align-items: flex-end;
       justify-content: center;
       z-index: 100;
-      opacity: 0;
-      transition: opacity 0.2s ease;
     }
     .modal-overlay.open {
       display: flex;
-      opacity: 1;
     }
     .modal-sheet {
       width: 100%;
@@ -514,7 +507,6 @@
       letter-spacing: -0.4px;
     }
 
-    /* iOS Glass Controls */
     .ios-input {
       width: 100%;
       background: rgba(255, 255, 255, 0.06);
@@ -550,7 +542,6 @@
       font-weight: 700;
       color: var(--text-dim);
       margin-bottom: 4px;
-      letter-spacing: 0.5px;
     }
     .stepper-val {
       font-size: 19px;
@@ -642,31 +633,131 @@
       letter-spacing: -0.6px;
     }
 
-    /* Set Checklist Chips */
-    .set-chips {
+    /* Set with Weights Tracker */
+    .session-sets-table {
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
       gap: 8px;
-      margin: 18px 0;
+      margin: 16px 0;
     }
-    .set-chip {
-      flex: 1 0 calc(25% - 8px);
-      min-width: 68px;
-      background: rgba(255, 255, 255, 0.05);
+    .set-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 12px 6px;
+      border-radius: 16px;
+      padding: 8px 12px;
+    }
+    .set-tag {
+      font-size: 13px;
+      font-weight: 700;
+      width: 48px;
+    }
+    .set-weight-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .weight-input {
+      width: 65px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
       text-align: center;
+      padding: 6px 0;
+      outline: none;
+    }
+    .weight-input:focus {
+      border-color: var(--accent);
+    }
+    .set-check-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+    .set-check-btn.done {
+      background: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 2px 10px var(--accent-glow);
+    }
+
+    /* Insights Calendar Grid */
+    .calendar-card {
+      padding: 18px;
+    }
+    .cal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .cal-title {
+      font-size: 16px;
+      font-weight: 800;
+    }
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      text-align: center;
+    }
+    .cal-weekday {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-dim);
+      padding-bottom: 4px;
+    }
+    .cal-day {
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.03);
       font-size: 12px;
       font-weight: 700;
-      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+      position: relative;
     }
-    .set-chip.completed {
-      background: rgba(255, 59, 92, 0.25);
-      border-color: var(--accent);
-      color: white;
-      transform: scale(1.02);
+    .cal-day.active-day {
+      border: 1.5px solid var(--accent);
+      background: rgba(255, 59, 92, 0.15);
+    }
+    .cal-day.has-data::after {
+      content: '';
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--accent);
+      position: absolute;
+      bottom: 4px;
+      box-shadow: 0 0 6px var(--accent);
+    }
+
+    /* PR Table */
+    .pr-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      margin-bottom: 8px;
     }
 
     .hidden { display: none !important; }
@@ -685,12 +776,14 @@
         <div class="logo-icon">⚡️</div>
         <span class="logo-title">Exodus</span>
       </div>
-      <div class="ios-badge" id="unitBadge">KG</div>
+      <div class="top-actions">
+        <button class="pr-pill-btn" id="openPrBtn">🏆 PRs</button>
+        <div class="ios-badge" id="unitBadge">KG</div>
+      </div>
     </header>
 
     <!-- TAB 1: TODAY -->
     <main id="tab-today">
-      <!-- Progress Summary -->
       <section class="ios-card progress-banner">
         <div class="progress-circle-wrap">
           <svg>
@@ -709,27 +802,24 @@
         </div>
       </section>
 
-      <!-- Stopwatch Bar -->
       <section class="ios-card stopwatch-island">
         <div class="stopwatch-left">
           <div style="width: 38px; height: 38px; border-radius: 12px; background: rgba(255, 59, 92, 0.15); display: flex; align-items: center; justify-content: center; font-size: 18px;">
             ⏱️
           </div>
           <div>
-            <div style="font-size: 10px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.6px;">ACTIVE WORKOUT</div>
+            <div style="font-size: 10px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.6px;">SESSION STOPWATCH</div>
             <div style="font-size: 19px; font-weight: 800;" id="stopwatchDisplay">00:00</div>
           </div>
         </div>
         <div>
           <button class="stopwatch-btn" id="stopwatchToggleBtn">Start</button>
-          <button class="stopwatch-btn" style="color: var(--text-dim);" id="stopwatchResetBtn">Reset</button>
+          <button class="stopwatch-btn" style="color: var(--text-dim);" id="stopwatchResetBtn">Log</button>
         </div>
       </section>
 
-      <!-- Day Pills -->
       <nav class="day-strip" id="dayStrip"></nav>
 
-      <!-- Routine Header -->
       <div class="section-header">
         <div>
           <div class="section-title" id="sectionDayTitle">Push Routine</div>
@@ -738,35 +828,34 @@
         <button class="reset-btn" id="resetDayBtn">Reset Day</button>
       </div>
 
-      <!-- Flowing Workout Card List -->
       <div id="workoutList"></div>
     </main>
 
     <!-- TAB 2: PLAN -->
     <main id="tab-plan" class="hidden">
-      <div class="section-title" style="margin-bottom: 6px;">Weekly Schedule</div>
-      <div style="font-size: 13px; color: var(--text-dim); margin-bottom: 16px;">Tap any split to edit its title, muscle focus, or exercises.</div>
+      <div class="section-title" style="margin-bottom: 6px;">Weekly Splits</div>
+      <div style="font-size: 13px; color: var(--text-dim); margin-bottom: 16px;">Tap any split to customize exercises, sets, or rest intervals.</div>
       <div id="planList"></div>
     </main>
 
     <!-- TAB 3: INSIGHTS -->
     <main id="tab-insights" class="hidden">
-      <div class="section-title" style="margin-bottom: 14px;">Activity & Streaks</div>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
-        <div class="ios-card" style="margin-bottom: 0;">
-          <div style="font-size: 26px; font-weight: 800; color: #ff6e87;" id="totalWorkoutsCompleted">0</div>
-          <div style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">Completed Moves</div>
+      <div class="section-title" style="margin-bottom: 14px;">Training Logs & Calendar</div>
+      
+      <!-- Calendar Card -->
+      <section class="ios-card calendar-card">
+        <div class="cal-header">
+          <div class="cal-title" id="calMonthTitle">September 2026</div>
+          <div style="font-size: 11px; font-weight: 700; color: var(--accent);">• Logged Workouts</div>
         </div>
-        <div class="ios-card" style="margin-bottom: 0;">
-          <div style="font-size: 26px; font-weight: 800; color: #ffa06e;" id="activeDaysCount">5</div>
-          <div style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">Active Split Days</div>
-        </div>
-      </div>
-      <div class="ios-card">
-        <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.8px; margin-bottom: 8px;">NATIVE FEEL</div>
-        <div style="font-size: 13px; line-height: 1.6; color: var(--text-dim);">
-          Equipped with fluid drag-and-drop mechanics, iOS spring dynamics, local cache storage, and zero external tracking.
-        </div>
+        <div class="cal-grid" id="calGrid"></div>
+      </section>
+
+      <!-- Selected Calendar Day Detail Box -->
+      <div class="ios-card" id="calDayDetailsBox">
+        <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.8px; margin-bottom: 6px;" id="calDetailDate">TAP A DAY TO VIEW LOG</div>
+        <div style="font-size: 18px; font-weight: 800; margin-bottom: 4px;" id="calDetailTitle">Daily Summary</div>
+        <div style="font-size: 13px; color: var(--text-dim);" id="calDetailStats">Select any day on the calendar to see completed movements and total time.</div>
       </div>
     </main>
 
@@ -799,7 +888,6 @@
 
   </div>
 
-  <!-- Floating Add Button -->
   <button class="fab" id="fabAddBtn">+</button>
 
   <!-- iOS Bottom Navigation Bar -->
@@ -822,7 +910,7 @@
     </button>
   </nav>
 
-  <!-- MODAL 1: ADD / EDIT WORKOUT (NO FORM CUES BOX) -->
+  <!-- MODAL 1: ADD / EDIT WORKOUT -->
   <div class="modal-overlay" id="editorModal">
     <div class="modal-sheet">
       <div class="drag-handle"></div>
@@ -833,15 +921,15 @@
 
       <input type="text" id="editName" class="ios-input" placeholder="Workout Name (e.g. Incline Bench)" />
       
-      <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.6px; margin-bottom: 8px;">MUSCLE CLASSIFICATION</div>
+      <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.6px; margin-bottom: 8px;">TARGET MUSCLE GROUP</div>
       <select id="editKind" class="ios-input">
-        <option value="chest">🫁 Chest</option>
-        <option value="back">🦅 Back</option>
-        <option value="shoulders">🥥 Shoulders</option>
-        <option value="arms">💪 Arms</option>
-        <option value="forearms">✊ Forearms</option>
-        <option value="legs">🦵 Legs</option>
-        <option value="abs">🍫 Abs & Core</option>
+        <option value="chest">🏋️‍♂️ Chest</option>
+        <option value="back">🧗 Back / Lats</option>
+        <option value="shoulders">🤸 Shoulders / Delts</option>
+        <option value="arms">💪 Arms (Biceps / Triceps)</option>
+        <option value="forearms">🦾 Forearms & Grip</option>
+        <option value="legs">🦵 Legs (Quads / Hams)</option>
+        <option value="abs">🧘 Abs & Core</option>
       </select>
 
       <div class="steppers-row">
@@ -876,7 +964,7 @@
     </div>
   </div>
 
-  <!-- MODAL 2: LIVE REST TIMER & SET LOGGING -->
+  <!-- MODAL 2: LIVE REST TIMER + SET & WEIGHT LOGGER -->
   <div class="modal-overlay" id="sessionModal">
     <div class="modal-sheet">
       <div class="drag-handle"></div>
@@ -902,8 +990,8 @@
         </div>
       </div>
 
-      <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.8px; margin-top: 10px;">TAP SET TO LOG & START REST</div>
-      <div class="set-chips" id="sessionSetChips"></div>
+      <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.8px; margin-top: 10px;">LOG WEIGHT & TAP CHECK FOR SET</div>
+      <div class="session-sets-table" id="sessionSetsContainer"></div>
 
       <button class="ios-btn-primary" id="finishSessionBtn">Done & Complete</button>
     </div>
@@ -918,8 +1006,8 @@
         <button id="closePlanDayBtn" style="background:none; border:none; color:var(--text-dim); font-size:20px; cursor:pointer;">✕</button>
       </div>
 
-      <input type="text" id="planDayName" class="ios-input" placeholder="Split Name (e.g. Upper Body A)" />
-      <input type="text" id="planDayFocus" class="ios-input" placeholder="Muscle Focus (e.g. Chest + Delts)" />
+      <input type="text" id="planDayName" class="ios-input" placeholder="Split Name" />
+      <input type="text" id="planDayFocus" class="ios-input" placeholder="Muscle Focus" />
 
       <div style="display: flex; justify-content: space-between; align-items: center; margin: 16px 0 10px;">
         <div style="font-size: 12px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.6px;">SCHEDULED MOVEMENTS</div>
@@ -931,8 +1019,20 @@
     </div>
   </div>
 
+  <!-- MODAL 4: PERSONAL RECORDS (PR) SHOWCASE -->
+  <div class="modal-overlay" id="prModal">
+    <div class="modal-sheet">
+      <div class="drag-handle"></div>
+      <div class="modal-header">
+        <div class="modal-title">Personal Records 🏆</div>
+        <button id="closePrBtn" style="background:none; border:none; color:var(--text-dim); font-size:20px; cursor:pointer;">✕</button>
+      </div>
+      <div style="font-size: 12px; color: var(--text-dim); margin-bottom: 16px;">All-time heaviest recorded weights for each exercise.</div>
+      <div id="prList"></div>
+    </div>
+  </div>
+
   <script>
-    // Audio synthesis chime for timer completion
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playChime() {
       try {
@@ -948,18 +1048,17 @@
       } catch (e) {}
     }
 
-    // Muscle Emojis & Labels
+    // Accurate Workout & Anatomy Emojis
     const EMOJI_MAP = {
-      chest: { emoji: '🫁', label: 'Chest' },
-      back: { emoji: '🦅', label: 'Back' },
-      shoulders: { emoji: '🥥', label: 'Shoulders' },
+      chest: { emoji: '🏋️‍♂️', label: 'Chest' },
+      back: { emoji: '🧗', label: 'Back' },
+      shoulders: { emoji: '🤸', label: 'Shoulders' },
       arms: { emoji: '💪', label: 'Arms' },
-      forearms: { emoji: '✊', label: 'Forearms' },
+      forearms: { emoji: '🦾', label: 'Forearms' },
       legs: { emoji: '🦵', label: 'Legs' },
-      abs: { emoji: '🍫', label: 'Abs & Core' }
+      abs: { emoji: '🧘', label: 'Abs & Core' }
     };
 
-    // Default Seed Data
     const DEFAULT_DAYS = [
       {
         name: 'Push', focus: 'Chest + shoulders',
@@ -1006,20 +1105,24 @@
     ];
 
     // State Variables
-    let days = JSON.parse(localStorage.getItem('exodus_days_v2')) || DEFAULT_DAYS;
-    let settings = JSON.parse(localStorage.getItem('exodus_settings_v2')) || {
+    let days = JSON.parse(localStorage.getItem('exodus_days_v3')) || DEFAULT_DAYS;
+    let settings = JSON.parse(localStorage.getItem('exodus_settings_v3')) || {
       units: 'KG',
       name: 'Alex Morgan',
       focus: 'Strength & Conditioning'
     };
+    // Logs keyed by "YYYY-MM-DD"
+    let historyLogs = JSON.parse(localStorage.getItem('exodus_history_v3')) || {};
+    // Personal Records keyed by exercise name
+    let personalRecords = JSON.parse(localStorage.getItem('exodus_prs_v3')) || {};
 
     let selectedDayIdx = (new Date().getDay() + 6) % 7;
-    if (selectedDayIdx > 5) selectedDayIdx = 0; // Wrap Sunday to Monday
+    if (selectedDayIdx > 5) selectedDayIdx = 0;
 
     let activeEditDayIdx = 0;
     let activeEditWorkout = null;
     let activeSessionWorkout = null;
-    let sessionSetsState = [];
+    let sessionSetsData = [];
     let restTimerInterval = null;
     let restRemaining = 0;
 
@@ -1029,9 +1132,16 @@
     let stopwatchTimer = null;
 
     function saveState() {
-      localStorage.setItem('exodus_days_v2', JSON.stringify(days));
-      localStorage.setItem('exodus_settings_v2', JSON.stringify(settings));
+      localStorage.setItem('exodus_days_v3', JSON.stringify(days));
+      localStorage.setItem('exodus_settings_v3', JSON.stringify(settings));
+      localStorage.setItem('exodus_history_v3', JSON.stringify(historyLogs));
+      localStorage.setItem('exodus_prs_v3', JSON.stringify(personalRecords));
       render();
+    }
+
+    function getTodayKey() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     }
 
     function render() {
@@ -1039,8 +1149,9 @@
       renderDayStrip();
       renderWorkouts();
       renderPlan();
-      renderInsights();
+      renderCalendar();
       renderSettings();
+      renderPrList();
       document.getElementById('unitBadge').innerText = settings.units;
     }
 
@@ -1050,7 +1161,6 @@
       const completed = currentDay.workouts.filter(w => w.done).length;
       const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
 
-      // SVG circumference = 2 * PI * 35 = 219.9
       const offset = 219.9 - (219.9 * (pct / 100));
       document.getElementById('progressRing').style.strokeDashoffset = offset;
       document.getElementById('progressPctText').innerText = `${pct}%`;
@@ -1121,43 +1231,48 @@
           </div>
         `;
 
-        // Checkbox click
         card.querySelector('.checkbox').onclick = (e) => {
           e.stopPropagation();
           w.done = !w.done;
+          recordWorkoutCompletion(w);
           saveState();
         };
 
-        // Tap opens live timer / sets
         card.onclick = (e) => {
           if (card.classList.contains('dragging')) return;
           openSessionModal(w);
         };
 
-        // Attach Apple Flowing Drag Handlers
         attachFluidReorder(card, list, selectedDayIdx);
-
         list.appendChild(card);
       });
     }
 
+    function recordWorkoutCompletion(workout) {
+      const key = getTodayKey();
+      if (!historyLogs[key]) {
+        historyLogs[key] = { workouts: [], totalSeconds: 0 };
+      }
+      if (workout.done) {
+        if (!historyLogs[key].workouts.includes(workout.name)) {
+          historyLogs[key].workouts.push(workout.name);
+        }
+      }
+    }
+
     /* -------------------------------------------------------------
-       APPLE LIQUID / FLOW-ISH TOUCH & DRAG REORDERING
+       APPLE LIQUID / FLOW-ISH TOUCH REORDERING
     ------------------------------------------------------------- */
     function attachFluidReorder(card, container, dayIndex) {
       let isDragging = false;
       let startY = 0;
       let curY = 0;
-      let initialTop = 0;
       let touchTimeout = null;
 
       const onTouchStart = (e) => {
         const touch = e.touches ? e.touches[0] : e;
         startY = touch.clientY;
-        const rect = card.getBoundingClientRect();
-        initialTop = rect.top;
 
-        // Long-press detection to distinguish drag from tap
         touchTimeout = setTimeout(() => {
           isDragging = true;
           card.classList.add('dragging');
@@ -1178,7 +1293,6 @@
         curY = touch.clientY;
         card.style.transform = `translateY(${deltaY}px) scale(1.04) rotate(0.8deg)`;
 
-        // Identify card directly underneath
         const siblings = [...container.querySelectorAll('.workout-item:not(.dragging)')];
         siblings.forEach(sibling => {
           const sRect = sibling.getBoundingClientRect();
@@ -1200,7 +1314,6 @@
         card.classList.remove('dragging');
         card.style.transform = '';
 
-        // Reconstruct items in local memory based on DOM order
         const reordered = [];
         container.querySelectorAll('.workout-item').forEach(item => {
           const idx = parseInt(item.dataset.index, 10);
@@ -1210,13 +1323,11 @@
         saveState();
       };
 
-      // Pointer / Touch bindings
       card.addEventListener('touchstart', onTouchStart, { passive: true });
       card.addEventListener('touchmove', onTouchMove, { passive: false });
       card.addEventListener('touchend', onTouchEnd);
       card.addEventListener('touchcancel', onTouchEnd);
 
-      // Mouse desktop support
       card.addEventListener('mousedown', onTouchStart);
       window.addEventListener('mousemove', onTouchMove);
       window.addEventListener('mouseup', onTouchEnd);
@@ -1247,11 +1358,71 @@
       });
     }
 
-    function renderInsights() {
-      let total = 0;
-      days.forEach(d => d.workouts.forEach(w => { if(w.done) total++; }));
-      document.getElementById('totalWorkoutsCompleted').innerText = total;
-      document.getElementById('activeDaysCount').innerText = days.filter(d => d.workouts.length > 0).length;
+    /* -------------------------------------------------------------
+       INSIGHTS CALENDAR & HISTORY LOGS
+    ------------------------------------------------------------- */
+    function renderCalendar() {
+      const calGrid = document.getElementById('calGrid');
+      calGrid.innerHTML = '';
+      
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth();
+      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      document.getElementById('calMonthTitle').innerText = `${monthNames[month]} ${year}`;
+
+      const weekdays = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+      weekdays.forEach(w => {
+        const cell = document.createElement('div');
+        cell.className = 'cal-weekday';
+        cell.innerText = w;
+        calGrid.appendChild(cell);
+      });
+
+      const firstDayIdx = (new Date(year, month, 1).getDay() + 6) % 7;
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      for (let i = 0; i < firstDayIdx; i++) {
+        calGrid.appendChild(document.createElement('div'));
+      }
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dayCell = document.createElement('div');
+        dayCell.className = 'cal-day';
+        dayCell.innerText = d;
+        const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+
+        if (historyLogs[dateKey] && historyLogs[dateKey].workouts && historyLogs[dateKey].workouts.length > 0) {
+          dayCell.classList.add('has-data');
+        }
+
+        if (d === now.getDate()) {
+          dayCell.classList.add('active-day');
+        }
+
+        dayCell.onclick = () => showCalendarDayDetail(dateKey, d, monthNames[month], year);
+        calGrid.appendChild(dayCell);
+      }
+    }
+
+    function showCalendarDayDetail(dateKey, dayNum, monthName, year) {
+      document.querySelectorAll('.cal-day').forEach(c => c.style.borderColor = '');
+      document.getElementById('calDetailDate').innerText = `${monthName.toUpperCase()} ${dayNum}, ${year}`;
+      
+      const log = historyLogs[dateKey];
+      if (log && log.workouts && log.workouts.length > 0) {
+        document.getElementById('calDetailTitle').innerText = `${log.workouts.length} Movements Completed`;
+        const mins = Math.floor((log.totalSeconds || 0) / 60);
+        const secs = (log.totalSeconds || 0) % 60;
+        const durationText = mins > 0 ? `${mins}m ${secs}s total session time` : `${secs}s session time`;
+        document.getElementById('calDetailStats').innerHTML = `
+          <div style="margin-bottom: 6px; color:#ff6e87; font-weight:700;">${durationText}</div>
+          <div style="line-height: 1.5;">${log.workouts.map(w => `• ${w}`).join('<br/>')}</div>
+        `;
+      } else {
+        document.getElementById('calDetailTitle').innerText = 'No Session Logged';
+        document.getElementById('calDetailStats').innerText = 'Rest day or workouts were not marked completed on this date.';
+      }
     }
 
     function renderSettings() {
@@ -1260,13 +1431,11 @@
       document.getElementById('unitsSelect').value = settings.units || 'KG';
     }
 
-    // Modal Background Tap-to-Dismiss
+    // Modal Background Dismiss
     function setupBackdropDismiss(overlayId, modalSheetSelector, closeHandler) {
       const overlay = document.getElementById(overlayId);
       overlay.addEventListener('click', (e) => {
-        if (!e.target.closest(modalSheetSelector)) {
-          closeHandler();
-        }
+        if (!e.target.closest(modalSheetSelector)) closeHandler();
       });
     }
 
@@ -1280,6 +1449,9 @@
     setupBackdropDismiss('planDayModal', '.modal-sheet', () => {
       document.getElementById('planDayModal').classList.remove('open');
     });
+    setupBackdropDismiss('prModal', '.modal-sheet', () => {
+      document.getElementById('prModal').classList.remove('open');
+    });
 
     // Navigation Tabs Router
     function switchTab(tabId) {
@@ -1287,6 +1459,7 @@
       document.querySelectorAll('main').forEach(m => m.classList.add('hidden'));
       document.getElementById(`tab-${tabId}`).classList.remove('hidden');
       document.getElementById('fabAddBtn').style.display = (tabId === 'today') ? 'flex' : 'none';
+      if (tabId === 'insights') renderCalendar();
     }
 
     document.querySelectorAll('.nav-tab').forEach(tab => {
@@ -1313,6 +1486,12 @@
       }
     };
     document.getElementById('stopwatchResetBtn').onclick = () => {
+      if (stopwatchSeconds > 0) {
+        const key = getTodayKey();
+        if (!historyLogs[key]) historyLogs[key] = { workouts: [], totalSeconds: 0 };
+        historyLogs[key].totalSeconds = (historyLogs[key].totalSeconds || 0) + stopwatchSeconds;
+        saveState();
+      }
       clearInterval(stopwatchTimer);
       stopwatchRunning = false;
       stopwatchSeconds = 0;
@@ -1336,13 +1515,13 @@
       activeEditDayIdx = dayIdx;
 
       if (workout) {
-        document.getElementById('editorModalTitle').innerText = 'Edit Workout';
+        document.getElementById('editorModalTitle').innerText = 'Edit Movement';
         document.getElementById('editName').value = workout.name;
         document.getElementById('editKind').value = workout.kind || 'chest';
         curSets = workout.sets; curReps = workout.reps; curRest = workout.rest;
         document.getElementById('deleteWorkoutBtn').classList.remove('hidden');
       } else {
-        document.getElementById('editorModalTitle').innerText = 'New Workout';
+        document.getElementById('editorModalTitle').innerText = 'New Movement';
         document.getElementById('editName').value = '';
         document.getElementById('editKind').value = 'chest';
         curSets = 3; curReps = 10; curRest = 90;
@@ -1394,15 +1573,19 @@
       }
     };
 
-    // Live Workout Session & Rest Countdown
+    /* -------------------------------------------------------------
+       LIVE WORKOUT SESSION + SETS & WEIGHT LOGGING
+    ------------------------------------------------------------- */
     function openSessionModal(workout) {
       activeSessionWorkout = workout;
       const meta = EMOJI_MAP[workout.kind] || { emoji: '⚡️', label: 'Move' };
       document.getElementById('sessionWorkoutTitle').innerText = `${meta.emoji} ${workout.name}`;
       document.getElementById('sessionWorkoutSub').innerText = `${workout.sets} sets • ${workout.reps} reps • ${workout.rest}s rest`;
 
-      sessionSetsState = Array(workout.sets).fill(false);
-      renderSessionChips();
+      // Initialize sets with previous PR weight or 20kg
+      const prevWeight = personalRecords[workout.name] || 20;
+      sessionSetsData = Array(workout.sets).fill(null).map(() => ({ done: false, weight: prevWeight }));
+      renderSessionSetsTable();
 
       restRemaining = workout.rest;
       document.getElementById('restTimerDisplay').innerText = `${restRemaining}s`;
@@ -1411,26 +1594,44 @@
       document.getElementById('sessionModal').classList.add('open');
     }
 
-    document.getElementById('editFromSessionBtn').onclick = () => {
-      document.getElementById('sessionModal').classList.remove('open');
-      openWorkoutEditor(activeSessionWorkout, selectedDayIdx);
-    };
-
-    function renderSessionChips() {
-      const container = document.getElementById('sessionSetChips');
+    function renderSessionSetsTable() {
+      const container = document.getElementById('sessionSetsContainer');
       container.innerHTML = '';
-      sessionSetsState.forEach((done, i) => {
-        const chip = document.createElement('div');
-        chip.className = `set-chip ${done ? 'completed' : ''}`;
-        chip.innerText = `Set ${i + 1} ${done ? '✓' : ''}`;
-        chip.onclick = () => {
-          sessionSetsState[i] = !sessionSetsState[i];
-          renderSessionChips();
-          if (sessionSetsState[i]) startRestCountdown();
-        };
-        container.appendChild(chip);
+      sessionSetsData.forEach((setData, i) => {
+        const row = document.createElement('div');
+        row.className = 'set-row';
+        row.innerHTML = `
+          <div class="set-tag">SET ${i + 1}</div>
+          <div class="set-weight-box">
+            <input type="number" class="weight-input" value="${setData.weight}" onchange="updateSetWeight(${i}, this.value)" />
+            <span style="font-size: 11px; font-weight:700; color:var(--text-dim);">${settings.units}</span>
+          </div>
+          <button class="set-check-btn ${setData.done ? 'done' : ''}" onclick="toggleSetDone(${i})">✓</button>
+        `;
+        container.appendChild(row);
       });
     }
+
+    window.updateSetWeight = function(idx, val) {
+      const num = parseFloat(val) || 0;
+      sessionSetsData[idx].weight = num;
+    };
+
+    window.toggleSetDone = function(idx) {
+      sessionSetsData[idx].done = !sessionSetsData[idx].done;
+      renderSessionSetsTable();
+
+      // Check if this set is a PR
+      if (sessionSetsData[idx].done) {
+        const wName = activeSessionWorkout.name;
+        const loggedWeight = sessionSetsData[idx].weight;
+        if (!personalRecords[wName] || loggedWeight > personalRecords[wName]) {
+          personalRecords[wName] = loggedWeight;
+          saveState();
+        }
+        startRestCountdown();
+      }
+    };
 
     function startRestCountdown() {
       clearInterval(restTimerInterval);
@@ -1438,7 +1639,6 @@
       const totalRest = activeSessionWorkout.rest;
       const ring = document.getElementById('restRing');
 
-      // Circumference = 2 * PI * 71 = 446.1
       restTimerInterval = setInterval(() => {
         restRemaining--;
         document.getElementById('restTimerDisplay').innerText = `${restRemaining}s`;
@@ -1452,6 +1652,11 @@
       }, 1000);
     }
 
+    document.getElementById('editFromSessionBtn').onclick = () => {
+      document.getElementById('sessionModal').classList.remove('open');
+      openWorkoutEditor(activeSessionWorkout, selectedDayIdx);
+    };
+
     document.getElementById('closeSessionBtn').onclick = () => {
       clearInterval(restTimerInterval);
       document.getElementById('sessionModal').classList.remove('open');
@@ -1459,8 +1664,9 @@
 
     document.getElementById('finishSessionBtn').onclick = () => {
       clearInterval(restTimerInterval);
-      if (sessionSetsState.every(s => s)) {
+      if (sessionSetsData.every(s => s.done)) {
         activeSessionWorkout.done = true;
+        recordWorkoutCompletion(activeSessionWorkout);
       }
       saveState();
       document.getElementById('sessionModal').classList.remove('open');
@@ -1471,7 +1677,42 @@
       saveState();
     };
 
-    // Plan Day Customizer
+    /* -------------------------------------------------------------
+       PERSONAL RECORDS (PR) MODAL
+    ------------------------------------------------------------- */
+    function renderPrList() {
+      const container = document.getElementById('prList');
+      container.innerHTML = '';
+      const keys = Object.keys(personalRecords);
+
+      if (keys.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; color: var(--text-dim); padding: 24px 0; font-size: 13px;">
+            No PRs logged yet. Log weights while completing exercise sets to establish your records!
+          </div>`;
+        return;
+      }
+
+      keys.forEach(name => {
+        const item = document.createElement('div');
+        item.className = 'pr-item';
+        item.innerHTML = `
+          <div style="font-size: 15px; font-weight: 700;">${name}</div>
+          <div style="font-size: 16px; font-weight: 800; color: #ff6e87;">${personalRecords[name]} ${settings.units}</div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    document.getElementById('openPrBtn').onclick = () => {
+      renderPrList();
+      document.getElementById('prModal').classList.add('open');
+    };
+    document.getElementById('closePrBtn').onclick = () => {
+      document.getElementById('prModal').classList.remove('open');
+    };
+
+    // Split Customizer
     let currentEditingPlanDayIndex = 0;
     function openPlanDayModal(idx) {
       currentEditingPlanDayIndex = idx;
@@ -1488,7 +1729,7 @@
       const workouts = days[currentEditingPlanDayIndex].workouts;
 
       if (workouts.length === 0) {
-        container.innerHTML = `<div style="font-size:13px; color:var(--text-dim); text-align:center; padding:14px;">No exercises in this split yet.</div>`;
+        container.innerHTML = `<div style="font-size:13px; color:var(--text-dim); text-align:center; padding:14px;">No movements in this split yet.</div>`;
         return;
       }
 
@@ -1553,6 +1794,8 @@
     document.getElementById('factoryResetBtn').onclick = () => {
       if (confirm('Restore Exodus default routine? Custom changes will be cleared.')) {
         days = JSON.parse(JSON.stringify(DEFAULT_DAYS));
+        personalRecords = {};
+        historyLogs = {};
         saveState();
       }
     };
