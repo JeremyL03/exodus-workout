@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Exodus — Workout Tracker</title>
+  
+  <!-- iOS PWA meta tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Exodus" />
+  <meta name="theme-color" content="#0d0b0e" />
+
+  <style>
+    :root {
+      --bg: #0d0b0e;
+      --card-bg: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent: #d9324f;
+      --accent-glow: rgba(217, 50, 79, 0.25);
+      --text: #f3f3f5;
+      --text-dim: rgba(255, 255, 255, 0.52);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      overflow-x: hidden;
+      padding-top: var(--safe-top);
+      padding-bottom: calc(var(--safe-bottom) + 90px);
+    }
+
+    /* Background Ambient Glows */
+    .glow-1 {
+      position: fixed;
+      top: -90px;
+      right: -80px;
+      width: 280px;
+      height: 280px;
+      background: rgba(141, 29, 56, 0.22);
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .glow-2 {
+      position: fixed;
+      top: 320px;
+      left: -120px;
+      width: 320px;
+      height: 320px;
+      background: rgba(70, 33, 59, 0.16);
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .app-container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 16px 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Glass Panels */
+    .glass-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-radius: 20px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+    .logo-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #7a1d36);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px var(--accent-glow);
+    }
+    .logo-text {
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 2.5px;
+    }
+    .badge {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-dim);
+    }
+
+    /* Progress Banner */
+    .progress-banner {
+      background: linear-gradient(135deg, #421822 0%, #1a131a 100%);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .progress-circle-wrap {
+      position: relative;
+      width: 76px;
+      height: 76px;
+      flex-shrink: 0;
+    }
+    .progress-circle-wrap svg {
+      transform: rotate(-90deg);
+      width: 76px;
+      height: 76px;
+    }
+    .progress-circle-wrap circle {
+      fill: none;
+      stroke-width: 6.5;
+      stroke-linecap: round;
+    }
+    .circle-bg {
+      stroke: rgba(255, 255, 255, 0.08);
+    }
+    .circle-fill {
+      stroke: #f15a67;
+      stroke-dasharray: 213.6;
+      stroke-dashoffset: 213.6;
+      transition: stroke-dashoffset 0.4s ease;
+    }
+    .progress-inner-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .progress-pct {
+      font-size: 16px;
+      font-weight: 800;
+    }
+    .progress-lbl {
+      font-size: 9px;
+      color: var(--text-dim);
+    }
+
+    /* Session Tracker Bar */
+    .tracker-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+    }
+    .timer-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .timer-btn {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 6px 10px;
+    }
+
+    /* Weekday Strip */
+    .day-strip {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      margin: 18px 0;
+    }
+    .day-pill {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 4px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .day-pill.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+    .day-pill .lbl {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-dim);
+    }
+    .day-pill.active .lbl {
+      color: #fff;
+    }
+    .day-pill .num {
+      font-size: 13px;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    /* Section Header */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 20px 0 10px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 800;
+    }
+    .reset-btn {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Workout List */
+    .workout-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+    .workout-item:active {
+      transform: scale(0.98);
+    }
+    .workout-meta {
+      flex: 1;
+    }
+    .workout-name {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      transition: color 0.2s;
+    }
+    .workout-name.done {
+      text-decoration: line-through;
+      color: rgba(255, 255, 255, 0.35);
+    }
+    .workout-sub {
+      font-size: 12px;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .type-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+    .checkbox {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-left: 12px;
+      transition: all 0.2s;
+    }
+    .checkbox.checked {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .checkbox svg {
+      display: none;
+      width: 14px;
+      height: 14px;
+      stroke: white;
+      stroke-width: 3;
+      fill: none;
+    }
+    .checkbox.checked svg {
+      display: block;
+    }
+
+    /* Floating Action Button */
+    .fab {
+      position: fixed;
+      right: 20px;
+      bottom: calc(var(--safe-bottom) + 85px);
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      background: var(--accent);
+      border: none;
+      color: white;
+      font-size: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px var(--accent-glow);
+      cursor: pointer;
+      z-index: 10;
+      transition: transform 0.15s;
+    }
+    .fab:active {
+      transform: scale(0.92);
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: calc(var(--safe-bottom) + 8px);
+      left: 16px;
+      right: 16px;
+      max-width: 448px;
+      margin: 0 auto;
+      background: rgba(30, 26, 32, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 26px;
+      display: flex;
+      justify-content: space-around;
+      padding: 6px 8px;
+      z-index: 20;
+    }
+    .nav-tab {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 6px 0;
+      border-radius: 18px;
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .nav-tab.active {
+      background: rgba(217, 50, 79, 0.18);
+      color: white;
+    }
+    .nav-tab svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+    .nav-tab.active svg {
+      stroke: var(--accent);
+    }
+
+    /* Modal / Bottom Sheet */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 100;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+    .modal-sheet {
+      width: 100%;
+      max-width: 480px;
+      background: #1c191e;
+      border-top-left-radius: 28px;
+      border-top-right-radius: 28px;
+      padding: 16px 20px calc(var(--safe-bottom) + 24px);
+      max-height: 88vh;
+      overflow-y: auto;
+      animation: slideUp 0.25s ease-out;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    .drag-pill {
+      width: 38px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      margin: 0 auto 16px;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .modal-title {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    /* Form Fields */
+    .input-field {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: white;
+      font-size: 14px;
+      outline: none;
+      margin-bottom: 14px;
+    }
+    .input-field:focus {
+      border-color: var(--accent);
+    }
+    .steppers-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .stepper-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 10px 4px;
+      text-align: center;
+    }
+    .stepper-label {
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+    }
+    .stepper-val {
+      font-size: 17px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .stepper-btns {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+    .step-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .primary-btn {
+      width: 100%;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .danger-btn {
+      width: 100%;
+      background: transparent;
+      color: #ff5252;
+      border: 1px solid rgba(255, 82, 82, 0.3);
+      border-radius: 14px;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    /* Rest Timer Circle in Session Overlay */
+    .rest-circle-wrap {
+      width: 150px;
+      height: 150px;
+      margin: 16px auto;
+      position: relative;
+    }
+    .rest-circle-wrap svg {
+      width: 150px;
+      height: 150px;
+      transform: rotate(-90deg);
+    }
+    .rest-circle-wrap circle {
+      fill: none;
+      stroke-width: 8;
+      stroke-linecap: round;
+    }
+    .rest-circle-fill {
+      stroke: var(--accent);
+      stroke-dasharray: 414.7;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1s linear;
+    }
+    .rest-center-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .rest-timer-sec {
+      font-size: 32px;
+      font-weight: 800;
+    }
+
+    /* Set Checklist Chips */
+    .set-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0;
+    }
+    .set-chip {
+      flex: 1 0 calc(25% - 8px);
+      min-width: 64px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 10px 4px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .set-chip.completed {
+      background: rgba(217, 50, 79, 0.22);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <div class="glow-1"></div>
+  <div class="glow-2"></div>
+
+  <div class="app-container">
+    
+    <!-- Top Brand Bar -->
+    <header class="top-bar">
+      <div class="logo-group">
+        <div class="logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 5v14M18 5v14M2 9h4M18 9h4M2 15h4M18 15h4M6 12h12" />
+          </svg>
+        </div>
+        <span class="logo-text">EXODUS</span>
+      </div>
+      <div class="badge" id="unitBadge">KG</div>
+    </header>
+
+    <!-- TAB 1: TODAY / HOME -->
+    <main id="tab-today">
+      <!-- Progress Card -->
+      <section class="glass-card progress-banner">
+        <div class="progress-circle-wrap">
+          <svg>
+            <circle class="circle-bg" cx="38" cy="38" r="34" />
+            <circle class="circle-fill" id="progressRing" cx="38" cy="38" r="34" />
+          </svg>
+          <div class="progress-inner-text">
+            <div class="progress-pct" id="progressPctText">0%</div>
+            <div class="progress-lbl">done</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size: 10.5px; font-weight: 800; color: #f67a84; letter-spacing: 1.2px;" id="currentDayFocusLabel">PUSH DAY</div>
+          <div style="font-size: 16px; font-weight: 700; margin: 4px 0;" id="progressFractionText">0 of 0 exercises</div>
+          <div style="font-size: 12px; color: var(--text-dim);" id="progressStatusQuote">Stay consistent with your rhythm.</div>
+        </div>
+      </section>
+
+      <!-- Session Stopwatch Bubble -->
+      <section class="glass-card tracker-bar">
+        <div class="timer-info">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(217, 50, 79, 0.15); display: flex; align-items: center; justify-content: center;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d9324f" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <div style="font-size: 9px; font-weight: 700; color: var(--text-dim); letter-spacing: 1px;">SESSION TIMER</div>
+            <div style="font-size: 18px; font-weight: 800;" id="stopwatchDisplay">00:00</div>
+          </div>
+        </div>
+        <div>
+          <button class="timer-btn" id="stopwatchToggleBtn">Start</button>
+          <button class="timer-btn" style="color: var(--text-dim);" id="stopwatchResetBtn">Reset</button>
+        </div>
+      </section>
+
+      <!-- Weekday Quick Selector -->
+      <nav class="day-strip" id="dayStrip"></nav>
+
+      <!-- Routine Header -->
+      <div class="section-header">
+        <div>
+          <div class="section-title" id="sectionDayTitle">Push Routine</div>
+          <div style="font-size: 12px; color: var(--text-dim);" id="sectionDayFocus">Chest + shoulders</div>
+        </div>
+        <button class="reset-btn" id="resetDayBtn">Reset Day</button>
+      </div>
+
+      <!-- Workout Cards List -->
+      <div id="workoutList"></div>
+    </main>
+
+    <!-- TAB 2: PLAN -->
+    <main id="tab-plan" class="hidden">
+      <div class="section-title" style="margin-bottom: 14px;">Weekly Splits</div>
+      <div id="planList"></div>
+    </main>
+
+    <!-- TAB 3: INSIGHTS -->
+    <main id="tab-insights" class="hidden">
+      <div class="section-title" style="margin-bottom: 14px;">Your Momentum</div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+        <div class="glass-card" style="margin-bottom: 0;">
+          <div style="font-size: 22px; font-weight: 800; color: #f07580;" id="totalWorkoutsCompleted">0</div>
+          <div style="font-size: 11px; color: var(--text-dim); margin-top: 4px;">Completed Movements</div>
+        </div>
+        <div class="glass-card" style="margin-bottom: 0;">
+          <div style="font-size: 22px; font-weight: 800; color: #e59a5d;" id="activeDaysCount">5</div>
+          <div style="font-size: 11px; color: var(--text-dim); margin-top: 4px;">Active Routine Splits</div>
+        </div>
+      </div>
+      <div class="glass-card">
+        <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 1.2px; margin-bottom: 14px;">SYSTEM ARCHITECTURE</div>
+        <div style="font-size: 13px; line-height: 1.6; color: var(--text-dim);">
+          All training schedules, checklist progress, and time logs are persisted directly to offline device storage via HTML5 LocalStorage.
+        </div>
+      </div>
+    </main>
+
+    <!-- TAB 4: SETTINGS -->
+    <main id="tab-settings" class="hidden">
+      <div class="section-title" style="margin-bottom: 14px;">Settings</div>
+      <div class="glass-card">
+        <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 1.2px; margin-bottom: 12px;">PREFERENCES</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+          <div>
+            <div style="font-size: 14px; font-weight: 700;">Haptic Taps</div>
+            <div style="font-size: 11px; color: var(--text-dim);">Vibrate on set toggles and timer ends</div>
+          </div>
+          <input type="checkbox" id="hapticsToggle" checked style="accent-color: var(--accent); width: 20px; height: 20px;" />
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 14px; font-weight: 700;">Units</div>
+            <div style="font-size: 11px; color: var(--text-dim);">Select training metrics</div>
+          </div>
+          <select id="unitsSelect" class="input-field" style="width: 100px; margin-bottom: 0; padding: 6px 10px;">
+            <option value="KG">KG</option>
+            <option value="LB">LB</option>
+          </select>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Floating Add Button -->
+  <button class="fab" id="fabAddBtn">+</button>
+
+  <!-- Bottom App Navigation Bar -->
+  <nav class="bottom-nav">
+    <button class="nav-tab active" data-tab="today">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Today</span>
+    </button>
+    <button class="nav-tab" data-tab="plan">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span>Plan</span>
+    </button>
+    <button class="nav-tab" data-tab="insights">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span>Insights</span>
+    </button>
+    <button class="nav-tab" data-tab="settings">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span>Settings</span>
+    </button>
+  </nav>
+
+  <!-- MODAL 1: WORKOUT EDITOR -->
+  <div class="modal-overlay" id="editorModal">
+    <div class="modal-sheet">
+      <div class="drag-pill"></div>
+      <div class="modal-header">
+        <div class="modal-title" id="editorModalTitle">New Movement</div>
+        <button id="closeEditorBtn" style="background:none; border:none; color:var(--text-dim); font-size:20px;">✕</button>
+      </div>
+      <input type="text" id="editName" class="input-field" placeholder="Movement Name (e.g. Incline Press)" />
+      <input type="text" id="editDef" class="input-field" placeholder="Form cues / Target focus" />
+      
+      <div class="steppers-row">
+        <div class="stepper-card">
+          <div class="stepper-label">SETS</div>
+          <div class="stepper-val" id="valSets">3</div>
+          <div class="stepper-btns">
+            <button class="step-btn" onclick="stepVal('Sets', -1)">-</button>
+            <button class="step-btn" onclick="stepVal('Sets', 1)">+</button>
+          </div>
+        </div>
+        <div class="stepper-card">
+          <div class="stepper-label">REPS</div>
+          <div class="stepper-val" id="valReps">10</div>
+          <div class="stepper-btns">
+            <button class="step-btn" onclick="stepVal('Reps', -1)">-</button>
+            <button class="step-btn" onclick="stepVal('Reps', 1)">+</button>
+          </div>
+        </div>
+        <div class="stepper-card">
+          <div class="stepper-label">REST (S)</div>
+          <div class="stepper-val" id="valRest">90</div>
+          <div class="stepper-btns">
+            <button class="step-btn" onclick="stepVal('Rest', -15)">-</button>
+            <button class="step-btn" onclick="stepVal('Rest', 15)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <button class="primary-btn" id="saveWorkoutBtn">Save Routine</button>
+      <button class="danger-btn hidden" id="deleteWorkoutBtn">Delete Routine</button>
+    </div>
+  </div>
+
+  <!-- MODAL 2: LIVE REST TIMER & SET LOGGING -->
+  <div class="modal-overlay" id="sessionModal">
+    <div class="modal-sheet">
+      <div class="drag-pill"></div>
+      <div class="modal-header">
+        <div>
+          <div class="modal-title" id="sessionWorkoutTitle">Incline Press</div>
+          <div style="font-size: 12px; color: var(--text-dim);" id="sessionWorkoutSub">4 sets • 10 reps • 90s rest</div>
+        </div>
+        <button id="closeSessionBtn" style="background:none; border:none; color:var(--text-dim); font-size:20px;">✕</button>
+      </div>
+
+      <div class="rest-circle-wrap">
+        <svg>
+          <circle class="circle-bg" cx="75" cy="75" r="66" />
+          <circle class="rest-circle-fill" id="restRing" cx="75" cy="75" r="66" />
+        </svg>
+        <div class="rest-center-text">
+          <div class="rest-timer-sec" id="restTimerDisplay">0s</div>
+          <div style="font-size: 9px; font-weight: 700; color: var(--text-dim); letter-spacing: 1px;">REST TIME</div>
+        </div>
+      </div>
+
+      <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 1.2px; margin-top: 10px;">TAP TO LOG COMPLETED SETS</div>
+      <div class="set-chips" id="sessionSetChips"></div>
+
+      <button class="primary-btn" id="finishSessionBtn">Finish Exercise</button>
+    </div>
+  </div>
+
+  <script>
+    // Audio synthesis beep for rest timer completion
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playBeep() {
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime); // High pitch A5
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.35);
+      } catch (e) {}
+    }
+
+    function triggerHaptic(type = 'light') {
+      if (!settings.haptics || !navigator.vibrate) return;
+      if (type === 'light') navigator.vibrate(12);
+      if (type === 'heavy') navigator.vibrate([40, 60, 80]);
+    }
+
+    // Default Seed Data
+    const DEFAULT_DAYS = [
+      {
+        name: 'Push', focus: 'Chest + shoulders',
+        workouts: [
+          { id: '1', name: 'Incline dumbbell press', kind: 'chest', sets: 4, reps: 10, rest: 90, done: false },
+          { id: '2', name: 'Cable fly', kind: 'chest', sets: 3, reps: 12, rest: 60, done: false },
+          { id: '3', name: 'Overhead press', kind: 'shoulders', sets: 4, reps: 8, rest: 120, done: false },
+          { id: '4', name: 'Lateral raises', kind: 'shoulders', sets: 3, reps: 15, rest: 45, done: false }
+        ]
+      },
+      {
+        name: 'Pull', focus: 'Back + biceps',
+        workouts: [
+          { id: '5', name: 'Lat pulldown', kind: 'back', sets: 4, reps: 10, rest: 90, done: false },
+          { id: '6', name: 'Seated cable row', kind: 'back', sets: 3, reps: 12, rest: 75, done: false },
+          { id: '7', name: 'Face pulls', kind: 'back', sets: 3, reps: 15, rest: 45, done: false },
+          { id: '8', name: 'Incline curls', kind: 'arms', sets: 3, reps: 12, rest: 60, done: false }
+        ]
+      },
+      {
+        name: 'Legs', focus: 'Quads + hamstrings',
+        workouts: [
+          { id: '9', name: 'Back squat', kind: 'legs', sets: 4, reps: 8, rest: 150, done: false },
+          { id: '10', name: 'Romanian deadlift', kind: 'legs', sets: 3, reps: 10, rest: 120, done: false },
+          { id: '11', name: 'Walking lunges', kind: 'legs', sets: 3, reps: 12, rest: 75, done: false }
+        ]
+      },
+      {
+        name: 'Core', focus: 'Stability + control',
+        workouts: [
+          { id: '12', name: 'Hanging knee raises', kind: 'core', sets: 3, reps: 12, rest: 60, done: false },
+          { id: '13', name: 'Cable crunch', kind: 'core', sets: 3, reps: 15, rest: 45, done: false }
+        ]
+      },
+      {
+        name: 'Full body', focus: 'Strength + conditioning',
+        workouts: [
+          { id: '14', name: 'Kettlebell swings', kind: 'legs', sets: 4, reps: 15, rest: 60, done: false },
+          { id: '15', name: 'Push ups', kind: 'chest', sets: 3, reps: 15, rest: 45, done: false }
+        ]
+      },
+      { name: 'Rest', focus: 'Active recovery', workouts: [] }
+    ];
+
+    const TYPE_COLORS = {
+      chest: '#E84357', shoulders: '#9070EE', back: '#C0527B',
+      arms: '#45B5BF', legs: '#EA8648', core: '#B88E4B'
+    };
+
+    // State Management
+    let days = JSON.parse(localStorage.getItem('exodus_days')) || DEFAULT_DAYS;
+    let settings = JSON.parse(localStorage.getItem('exodus_settings')) || { haptics: true, units: 'KG' };
+    let selectedDayIdx = (new Date().getDay() + 6) % 7; // Monday = 0
+    if (selectedDayIdx > 5) selectedDayIdx = 0; // Wrap Sunday to Monday
+    let activeEditWorkout = null;
+    let activeSessionWorkout = null;
+    let sessionSetsState = [];
+    let restTimerInterval = null;
+    let restRemaining = 0;
+
+    // Stopwatch State
+    let stopwatchSeconds = 0;
+    let stopwatchRunning = false;
+    let stopwatchTimer = null;
+
+    function saveState() {
+      localStorage.setItem('exodus_days', JSON.stringify(days));
+      localStorage.setItem('exodus_settings', JSON.stringify(settings));
+      render();
+    }
+
+    function render() {
+      renderProgress();
+      renderDayStrip();
+      renderWorkouts();
+      renderPlan();
+      renderInsights();
+      document.getElementById('unitBadge').innerText = settings.units;
+    }
+
+    function renderProgress() {
+      const currentDay = days[selectedDayIdx];
+      const total = currentDay.workouts.length;
+      const completed = currentDay.workouts.filter(w => w.done).length;
+      const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
+
+      // SVG circumference = 2 * PI * 34 = 213.6
+      const offset = 213.6 - (213.6 * (pct / 100));
+      document.getElementById('progressRing').style.strokeDashoffset = offset;
+      document.getElementById('progressPctText').innerText = `${pct}%`;
+      document.getElementById('progressFractionText').innerText = `${completed} of ${total} exercises`;
+      document.getElementById('currentDayFocusLabel').innerText = `${currentDay.name.toUpperCase()} DAY`;
+      document.getElementById('sectionDayTitle').innerText = `${currentDay.name} Routine`;
+      document.getElementById('sectionDayFocus').innerText = currentDay.focus;
+      
+      const quote = total === 0 ? 'Recovery day. Move gently.' : (pct === 100 ? 'Routines completed! Great work.' : 'Keep your rhythm. You’ve got this.');
+      document.getElementById('progressStatusQuote').innerText = quote;
+    }
+
+    function renderDayStrip() {
+      const labels = ['M', 'T', 'W', 'T', 'F', 'S'];
+      const container = document.getElementById('dayStrip');
+      container.innerHTML = '';
+      days.forEach((day, idx) => {
+        const pill = document.createElement('div');
+        pill.className = `day-pill ${idx === selectedDayIdx ? 'active' : ''}`;
+        pill.innerHTML = `<div class="lbl">${labels[idx]}</div><div class="num">${day.workouts.length}</div>`;
+        pill.onclick = () => {
+          triggerHaptic('light');
+          selectedDayIdx = idx;
+          render();
+        };
+        container.appendChild(pill);
+      });
+    }
+
+    function renderWorkouts() {
+      const list = document.getElementById('workoutList');
+      list.innerHTML = '';
+      const workouts = days[selectedDayIdx].workouts;
+
+      if (workouts.length === 0) {
+        list.innerHTML = `
+          <div class="glass-card" style="text-align: center; padding: 28px 16px;">
+            <div style="font-size: 24px; margin-bottom: 6px;">☕</div>
+            <div style="font-weight: 700;">Rest & Recharge</div>
+            <div style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">No movements planned. Hit + to add custom sets.</div>
+          </div>`;
+        return;
+      }
+
+      workouts.forEach((w) => {
+        const card = document.createElement('div');
+        card.className = 'glass-card workout-item';
+        const typeColor = TYPE_COLORS[w.kind] || '#fff';
+        card.innerHTML = `
+          <div class="workout-meta">
+            <div class="workout-name ${w.done ? 'done' : ''}">${w.name}</div>
+            <div class="workout-sub">
+              <span class="type-dot" style="background: ${typeColor};"></span>
+              <span>${w.sets} sets • ${w.reps} reps • ${w.rest}s</span>
+            </div>
+          </div>
+          <div class="checkbox ${w.done ? 'checked' : ''}" data-id="${w.id}">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+        `;
+
+        // Checkbox click toggles completion
+        card.querySelector('.checkbox').onclick = (e) => {
+          e.stopPropagation();
+          triggerHaptic('light');
+          w.done = !w.done;
+          saveState();
+        };
+
+        // Card body click opens active rest / session tracker
+        card.onclick = () => openSessionModal(w);
+
+        list.appendChild(card);
+      });
+    }
+
+    function renderPlan() {
+      const container = document.getElementById('planList');
+      container.innerHTML = '';
+      days.forEach((day, idx) => {
+        const item = document.createElement('div');
+        item.className = 'glass-card';
+        item.style.display = 'flex';
+        item.style.alignItems = 'center';
+        item.style.justifyContent = 'space-between';
+        item.innerHTML = `
+          <div>
+            <div style="font-weight: 700; font-size: 15px;">${day.name}</div>
+            <div style="font-size: 12px; color: var(--text-dim);">${day.focus}</div>
+          </div>
+          <div style="font-size: 13px; font-weight: 700; color: var(--text-dim);">${day.workouts.length} sets</div>
+        `;
+        item.onclick = () => {
+          selectedDayIdx = idx;
+          switchTab('today');
+        };
+        container.appendChild(item);
+      });
+    }
+
+    function renderInsights() {
+      let total = 0;
+      days.forEach(d => d.workouts.forEach(w => { if(w.done) total++; }));
+      document.getElementById('totalWorkoutsCompleted').innerText = total;
+      document.getElementById('activeDaysCount').innerText = days.filter(d => d.workouts.length > 0).length;
+    }
+
+    // Tabs Router
+    function switchTab(tabId) {
+      triggerHaptic('light');
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tabId));
+      document.querySelectorAll('main').forEach(m => m.classList.add('hidden'));
+      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+      document.getElementById('fabAddBtn').style.display = (tabId === 'today' || tabId === 'plan') ? 'flex' : 'none';
+    }
+
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+      tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+    });
+
+    // Session Stopwatch
+    const stopwatchDisplay = document.getElementById('stopwatchDisplay');
+    const stopwatchToggleBtn = document.getElementById('stopwatchToggleBtn');
+    document.getElementById('stopwatchToggleBtn').onclick = () => {
+      triggerHaptic('light');
+      if (stopwatchRunning) {
+        clearInterval(stopwatchTimer);
+        stopwatchRunning = false;
+        stopwatchToggleBtn.innerText = 'Resume';
+      } else {
+        stopwatchRunning = true;
+        stopwatchToggleBtn.innerText = 'Pause';
+        stopwatchTimer = setInterval(() => {
+          stopwatchSeconds++;
+          const mins = String(Math.floor(stopwatchSeconds / 60)).padStart(2, '0');
+          const secs = String(stopwatchSeconds % 60).padStart(2, '0');
+          stopwatchDisplay.innerText = `${mins}:${secs}`;
+        }, 1000);
+      }
+    };
+    document.getElementById('stopwatchResetBtn').onclick = () => {
+      triggerHaptic('light');
+      clearInterval(stopwatchTimer);
+      stopwatchRunning = false;
+      stopwatchSeconds = 0;
+      stopwatchDisplay.innerText = '00:00';
+      stopwatchToggleBtn.innerText = 'Start';
+    };
+
+    // Editor Modal Handling
+    let curSets = 3, curReps = 10, curRest = 90;
+    window.stepVal = function(field, delta) {
+      triggerHaptic('light');
+      if (field === 'Sets') curSets = Math.max(1, curSets + delta);
+      if (field === 'Reps') curReps = Math.max(1, curReps + delta);
+      if (field === 'Rest') curRest = Math.max(5, curRest + delta);
+      document.getElementById('valSets').innerText = curSets;
+      document.getElementById('valReps').innerText = curReps;
+      document.getElementById('valRest').innerText = curRest;
+    };
+
+    document.getElementById('fabAddBtn').onclick = () => {
+      activeEditWorkout = null;
+      document.getElementById('editorModalTitle').innerText = 'New Movement';
+      document.getElementById('editName').value = '';
+      document.getElementById('editDef').value = '';
+      curSets = 3; curReps = 10; curRest = 90;
+      stepVal('Sets', 0);
+      document.getElementById('deleteWorkoutBtn').classList.add('hidden');
+      document.getElementById('editorModal').classList.add('open');
+    };
+
+    document.getElementById('closeEditorBtn').onclick = () => {
+      document.getElementById('editorModal').classList.remove('open');
+    };
+
+    document.getElementById('saveWorkoutBtn').onclick = () => {
+      const name = document.getElementById('editName').value.trim();
+      if (!name) return;
+      const def = document.getElementById('editDef').value.trim();
+      
+      // Basic classifier fallback
+      let kind = 'chest';
+      const text = `${name} ${def}`.toLowerCase();
+      if (text.includes('squat') || text.includes('leg') || text.includes('lunge')) kind = 'legs';
+      else if (text.includes('pull') || text.includes('row') || text.includes('back')) kind = 'back';
+      else if (text.includes('press') || text.includes('shoulder') || text.includes('delt')) kind = 'shoulders';
+      else if (text.includes('curl') || text.includes('arm')) kind = 'arms';
+      else if (text.includes('crunch') || text.includes('core') || text.includes('plank')) kind = 'core';
+
+      if (activeEditWorkout) {
+        activeEditWorkout.name = name;
+        activeEditWorkout.definition = def;
+        activeEditWorkout.sets = curSets;
+        activeEditWorkout.reps = curReps;
+        activeEditWorkout.rest = curRest;
+        activeEditWorkout.kind = kind;
+      } else {
+        days[selectedDayIdx].workouts.push({
+          id: String(Date.now()),
+          name, definition: def, kind,
+          sets: curSets, reps: curReps, rest: curRest, done: false
+        });
+      }
+      saveState();
+      document.getElementById('editorModal').classList.remove('open');
+    };
+
+    document.getElementById('deleteWorkoutBtn').onclick = () => {
+      if (!activeEditWorkout) return;
+      days[selectedDayIdx].workouts = days[selectedDayIdx].workouts.filter(w => w.id !== activeEditWorkout.id);
+      saveState();
+      document.getElementById('editorModal').classList.remove('open');
+    };
+
+    // Live Workout Session & Rest Timer
+    function openSessionModal(workout) {
+      activeSessionWorkout = workout;
+      document.getElementById('sessionWorkoutTitle').innerText = workout.name;
+      document.getElementById('sessionWorkoutSub').innerText = `${workout.sets} sets • ${workout.reps} reps • ${workout.rest}s rest`;
+      
+      sessionSetsState = Array(workout.sets).fill(false);
+      renderSessionChips();
+      
+      restRemaining = workout.rest;
+      document.getElementById('restTimerDisplay').innerText = `${restRemaining}s`;
+      document.getElementById('restRing').style.strokeDashoffset = 0;
+
+      document.getElementById('sessionModal').classList.add('open');
+    }
+
+    function renderSessionChips() {
+      const container = document.getElementById('sessionSetChips');
+      container.innerHTML = '';
+      sessionSetsState.forEach((done, i) => {
+        const chip = document.createElement('div');
+        chip.className = `set-chip ${done ? 'completed' : ''}`;
+        chip.innerText = `Set ${i + 1} ${done ? '✓' : ''}`;
+        chip.onclick = () => {
+          triggerHaptic('light');
+          sessionSetsState[i] = !sessionSetsState[i];
+          renderSessionChips();
+          if (sessionSetsState[i]) startRestCountdown();
+        };
+        container.appendChild(chip);
+      });
+    }
+
+    function startRestCountdown() {
+      clearInterval(restTimerInterval);
+      restRemaining = activeSessionWorkout.rest;
+      const totalRest = activeSessionWorkout.rest;
+      const ring = document.getElementById('restRing');
+      
+      // Circumference = 2 * PI * 66 = 414.7
+      restTimerInterval = setInterval(() => {
+        restRemaining--;
+        document.getElementById('restTimerDisplay').innerText = `${restRemaining}s`;
+        const offset = 414.7 - (414.7 * (restRemaining / totalRest));
+        ring.style.strokeDashoffset = offset;
+
+        if (restRemaining <= 0) {
+          clearInterval(restTimerInterval);
+          triggerHaptic('heavy');
+          playBeep();
+        }
+      }, 1000);
+    }
+
+    document.getElementById('closeSessionBtn').onclick = () => {
+      clearInterval(restTimerInterval);
+      document.getElementById('sessionModal').classList.remove('open');
+    };
+
+    document.getElementById('finishSessionBtn').onclick = () => {
+      clearInterval(restTimerInterval);
+      if (sessionSetsState.every(s => s)) {
+        activeSessionWorkout.done = true;
+      }
+      saveState();
+      document.getElementById('sessionModal').classList.remove('open');
+    };
+
+    document.getElementById('resetDayBtn').onclick = () => {
+      triggerHaptic('light');
+      days[selectedDayIdx].workouts.forEach(w => w.done = false);
+      saveState();
+    };
+
+    // Settings Listeners
+    document.getElementById('hapticsToggle').onchange = (e) => {
+      settings.haptics = e.target.checked;
+      saveState();
+    };
+    document.getElementById('unitsSelect').onchange = (e) => {
+      settings.units = e.target.value;
+      saveState();
+    };
+
+    // Initialize
+    render();
+  </script>
+</body>
+</html>
