@@ -41,10 +41,10 @@
       min-height: -webkit-fill-available;
       overflow-x: hidden;
       padding-top: var(--safe-top);
-      padding-bottom: calc(var(--safe-bottom) + 90px);
+      padding-bottom: calc(var(--safe-bottom) + 94px);
     }
 
-    /* Background Ambient Glows */
+    /* Ambient background blooms */
     .glow-1 {
       position: fixed;
       top: -90px;
@@ -78,7 +78,7 @@
       z-index: 1;
     }
 
-    /* Glass Panels */
+    /* Glass Cards */
     .glass-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -89,7 +89,7 @@
       margin-bottom: 14px;
     }
 
-    /* Top Bar */
+    /* Top Brand Bar */
     .top-bar {
       display: flex;
       align-items: center;
@@ -175,7 +175,7 @@
       color: var(--text-dim);
     }
 
-    /* Session Tracker Bar */
+    /* Session Stopwatch Bar */
     .tracker-bar {
       display: flex;
       align-items: center;
@@ -253,26 +253,50 @@
       cursor: pointer;
     }
 
-    /* Workout List */
+    /* Workout List & Order Arrows */
     .workout-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 16px;
+      padding: 12px 14px;
       margin-bottom: 10px;
       cursor: pointer;
-      transition: transform 0.15s ease;
     }
-    .workout-item:active {
-      transform: scale(0.98);
+    .order-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+    .reorder-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: var(--text-dim);
+      border-radius: 6px;
+      width: 26px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .reorder-btn:active {
+      background: var(--accent);
+      color: white;
     }
     .workout-meta {
       flex: 1;
+      min-width: 0;
     }
     .workout-name {
       font-size: 15px;
       font-weight: 700;
       margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       transition: color 0.2s;
     }
     .workout-name.done {
@@ -290,11 +314,12 @@
       width: 7px;
       height: 7px;
       border-radius: 50%;
+      flex-shrink: 0;
     }
     .checkbox {
-      width: 22px;
-      height: 22px;
-      border-radius: 6px;
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
       border: 2px solid rgba(255, 255, 255, 0.25);
       display: flex;
       align-items: center;
@@ -320,7 +345,7 @@
       display: block;
     }
 
-    /* Floating Action Button */
+    /* Floating Add Button */
     .fab {
       position: fixed;
       right: 20px;
@@ -392,13 +417,13 @@
       stroke: var(--accent);
     }
 
-    /* Modal / Bottom Sheet */
+    /* Modal / Backdrop Tap Target */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       display: none;
       align-items: flex-end;
       justify-content: center;
@@ -410,13 +435,13 @@
     .modal-sheet {
       width: 100%;
       max-width: 480px;
-      background: #1c191e;
+      background: #1d191f;
       border-top-left-radius: 28px;
       border-top-right-radius: 28px;
       padding: 16px 20px calc(var(--safe-bottom) + 24px);
       max-height: 88vh;
       overflow-y: auto;
-      animation: slideUp 0.25s ease-out;
+      animation: slideUp 0.22s ease-out;
     }
     @keyframes slideUp {
       from { transform: translateY(100%); }
@@ -433,7 +458,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
     .modal-title {
       font-size: 18px;
@@ -450,7 +475,7 @@
       color: white;
       font-size: 14px;
       outline: none;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
     .input-field:focus {
       border-color: var(--accent);
@@ -505,6 +530,18 @@
       font-weight: 700;
       cursor: pointer;
     }
+    .secondary-btn {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
     .danger-btn {
       width: 100%;
       background: transparent;
@@ -518,7 +555,7 @@
       margin-top: 10px;
     }
 
-    /* Rest Timer Circle in Session Overlay */
+    /* Rest Timer Circle */
     .rest-circle-wrap {
       width: 150px;
       height: 150px;
@@ -604,7 +641,7 @@
 
     <!-- TAB 1: TODAY / HOME -->
     <main id="tab-today">
-      <!-- Progress Card -->
+      <!-- Progress Banner -->
       <section class="glass-card progress-banner">
         <div class="progress-circle-wrap">
           <svg>
@@ -619,11 +656,11 @@
         <div>
           <div style="font-size: 10.5px; font-weight: 800; color: #f67a84; letter-spacing: 1.2px;" id="currentDayFocusLabel">PUSH DAY</div>
           <div style="font-size: 16px; font-weight: 700; margin: 4px 0;" id="progressFractionText">0 of 0 exercises</div>
-          <div style="font-size: 12px; color: var(--text-dim);" id="progressStatusQuote">Stay consistent with your rhythm.</div>
+          <div style="font-size: 12px; color: var(--text-dim);" id="progressStatusQuote">Keep your rhythm. You’ve got this.</div>
         </div>
       </section>
 
-      <!-- Session Stopwatch Bubble -->
+      <!-- Session Stopwatch -->
       <section class="glass-card tracker-bar">
         <div class="timer-info">
           <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(217, 50, 79, 0.15); display: flex; align-items: center; justify-content: center;">
@@ -640,7 +677,7 @@
         </div>
       </section>
 
-      <!-- Weekday Quick Selector -->
+      <!-- Weekday Selector -->
       <nav class="day-strip" id="dayStrip"></nav>
 
       <!-- Routine Header -->
@@ -658,7 +695,8 @@
 
     <!-- TAB 2: PLAN -->
     <main id="tab-plan" class="hidden">
-      <div class="section-title" style="margin-bottom: 14px;">Weekly Splits</div>
+      <div class="section-title" style="margin-bottom: 6px;">Weekly Splits</div>
+      <div style="font-size: 13px; color: var(--text-dim); margin-bottom: 16px;">Tap any day to edit its split name, focus, or workouts.</div>
       <div id="planList"></div>
     </main>
 
@@ -672,13 +710,13 @@
         </div>
         <div class="glass-card" style="margin-bottom: 0;">
           <div style="font-size: 22px; font-weight: 800; color: #e59a5d;" id="activeDaysCount">5</div>
-          <div style="font-size: 11px; color: var(--text-dim); margin-top: 4px;">Active Routine Splits</div>
+          <div style="font-size: 11px; color: var(--text-dim); margin-top: 4px;">Active Split Days</div>
         </div>
       </div>
       <div class="glass-card">
-        <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 1.2px; margin-bottom: 14px;">SYSTEM ARCHITECTURE</div>
+        <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 1.2px; margin-bottom: 10px;">PROGRESSION ARCHITECTURE</div>
         <div style="font-size: 13px; line-height: 1.6; color: var(--text-dim);">
-          All training schedules, checklist progress, and time logs are persisted directly to offline device storage via HTML5 LocalStorage.
+          Workouts, personalized sets, reps, and reordered routines are cached directly to local storage. Your data remains fully offline on your device.
         </div>
       </div>
     </main>
@@ -686,16 +724,17 @@
     <!-- TAB 4: SETTINGS -->
     <main id="tab-settings" class="hidden">
       <div class="section-title" style="margin-bottom: 14px;">Settings</div>
+      
       <div class="glass-card">
-        <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 1.2px; margin-bottom: 12px;">PREFERENCES</div>
+        <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 1.2px; margin-bottom: 14px;">PROFILE</div>
+        <input type="text" id="settingProfileName" class="input-field" placeholder="Athlete Name" />
+        <input type="text" id="settingProfileFocus" class="input-field" placeholder="Primary Focus (e.g. Hypertrophy)" />
+        <button class="secondary-btn" style="margin-top: 2px;" id="saveProfileBtn">Save Profile</button>
+      </div>
+
+      <div class="glass-card">
+        <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 1.2px; margin-bottom: 14px;">PREFERENCES</div>
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-          <div>
-            <div style="font-size: 14px; font-weight: 700;">Haptic Taps</div>
-            <div style="font-size: 11px; color: var(--text-dim);">Vibrate on set toggles and timer ends</div>
-          </div>
-          <input type="checkbox" id="hapticsToggle" checked style="accent-color: var(--accent); width: 20px; height: 20px;" />
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
           <div>
             <div style="font-size: 14px; font-weight: 700;">Units</div>
             <div style="font-size: 11px; color: var(--text-dim);">Select training metrics</div>
@@ -705,6 +744,7 @@
             <option value="LB">LB</option>
           </select>
         </div>
+        <button class="danger-btn" id="factoryResetBtn">Reset All Splits to Default</button>
       </div>
     </main>
 
@@ -713,7 +753,7 @@
   <!-- Floating Add Button -->
   <button class="fab" id="fabAddBtn">+</button>
 
-  <!-- Bottom App Navigation Bar -->
+  <!-- Bottom Navigation Bar -->
   <nav class="bottom-nav">
     <button class="nav-tab active" data-tab="today">
       <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -733,17 +773,27 @@
     </button>
   </nav>
 
-  <!-- MODAL 1: WORKOUT EDITOR -->
+  <!-- MODAL 1: WORKOUT CREATOR / EDITOR -->
   <div class="modal-overlay" id="editorModal">
     <div class="modal-sheet">
       <div class="drag-pill"></div>
       <div class="modal-header">
         <div class="modal-title" id="editorModalTitle">New Movement</div>
-        <button id="closeEditorBtn" style="background:none; border:none; color:var(--text-dim); font-size:20px;">✕</button>
+        <button id="closeEditorBtn" style="background:none; border:none; color:var(--text-dim); font-size:22px; cursor:pointer;">✕</button>
       </div>
-      <input type="text" id="editName" class="input-field" placeholder="Movement Name (e.g. Incline Press)" />
+      <input type="text" id="editName" class="input-field" placeholder="Movement Name (e.g. Incline DB Press)" />
       <input type="text" id="editDef" class="input-field" placeholder="Form cues / Target focus" />
       
+      <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 1px; margin-bottom: 8px;">TARGET MUSCLE</div>
+      <select id="editKind" class="input-field">
+        <option value="chest">Chest</option>
+        <option value="back">Back</option>
+        <option value="shoulders">Shoulders</option>
+        <option value="arms">Arms</option>
+        <option value="legs">Legs</option>
+        <option value="core">Core</option>
+      </select>
+
       <div class="steppers-row">
         <div class="stepper-card">
           <div class="stepper-label">SETS</div>
@@ -785,7 +835,10 @@
           <div class="modal-title" id="sessionWorkoutTitle">Incline Press</div>
           <div style="font-size: 12px; color: var(--text-dim);" id="sessionWorkoutSub">4 sets • 10 reps • 90s rest</div>
         </div>
-        <button id="closeSessionBtn" style="background:none; border:none; color:var(--text-dim); font-size:20px;">✕</button>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <button id="editFromSessionBtn" style="background:none; border:none; color:var(--text-dim); font-size:18px; cursor:pointer;">✎</button>
+          <button id="closeSessionBtn" style="background:none; border:none; color:var(--text-dim); font-size:22px; cursor:pointer;">✕</button>
+        </div>
       </div>
 
       <div class="rest-circle-wrap">
@@ -795,38 +848,54 @@
         </svg>
         <div class="rest-center-text">
           <div class="rest-timer-sec" id="restTimerDisplay">0s</div>
-          <div style="font-size: 9px; font-weight: 700; color: var(--text-dim); letter-spacing: 1px;">REST TIME</div>
+          <div style="font-size: 9px; font-weight: 700; color: var(--text-dim); letter-spacing: 1px;">REST TIMER</div>
         </div>
       </div>
 
       <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 1.2px; margin-top: 10px;">TAP TO LOG COMPLETED SETS</div>
       <div class="set-chips" id="sessionSetChips"></div>
 
-      <button class="primary-btn" id="finishSessionBtn">Finish Exercise</button>
+      <button class="primary-btn" id="finishSessionBtn">Done & Complete</button>
+    </div>
+  </div>
+
+  <!-- MODAL 3: DAY PLAN CUSTOMIZER -->
+  <div class="modal-overlay" id="planDayModal">
+    <div class="modal-sheet">
+      <div class="drag-pill"></div>
+      <div class="modal-header">
+        <div class="modal-title" id="planDayModalTitle">Edit Split</div>
+        <button id="closePlanDayBtn" style="background:none; border:none; color:var(--text-dim); font-size:22px; cursor:pointer;">✕</button>
+      </div>
+
+      <input type="text" id="planDayName" class="input-field" placeholder="Split Name (e.g. Upper Body A)" />
+      <input type="text" id="planDayFocus" class="input-field" placeholder="Focus description (e.g. Chest + Lats)" />
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin: 16px 0 10px;">
+        <div style="font-size: 12px; font-weight: 700; color: var(--text-dim); letter-spacing: 1px;">SCHEDULED MOVEMENTS</div>
+        <button class="timer-btn" style="padding:0;" id="planDayAddWorkoutBtn">+ Add Movement</button>
+      </div>
+      <div id="planDayWorkoutsList" style="margin-bottom: 16px;"></div>
+
+      <button class="primary-btn" id="savePlanDayBtn">Save Split Changes</button>
     </div>
   </div>
 
   <script>
-    // Audio synthesis beep for rest timer completion
+    // Audio synthesis chime for timer completion
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playBeep() {
       try {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(880, audioCtx.currentTime); // High pitch A5
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime);
         gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.start();
         osc.stop(audioCtx.currentTime + 0.35);
       } catch (e) {}
-    }
-
-    function triggerHaptic(type = 'light') {
-      if (!settings.haptics || !navigator.vibrate) return;
-      if (type === 'light') navigator.vibrate(12);
-      if (type === 'heavy') navigator.vibrate([40, 60, 80]);
     }
 
     // Default Seed Data
@@ -879,11 +948,18 @@
       arms: '#45B5BF', legs: '#EA8648', core: '#B88E4B'
     };
 
-    // State Management
+    // State Variables
     let days = JSON.parse(localStorage.getItem('exodus_days')) || DEFAULT_DAYS;
-    let settings = JSON.parse(localStorage.getItem('exodus_settings')) || { haptics: true, units: 'KG' };
-    let selectedDayIdx = (new Date().getDay() + 6) % 7; // Monday = 0
+    let settings = JSON.parse(localStorage.getItem('exodus_settings')) || {
+      units: 'KG',
+      name: 'Alex Morgan',
+      focus: 'Strength + hypertrophy'
+    };
+
+    let selectedDayIdx = (new Date().getDay() + 6) % 7;
     if (selectedDayIdx > 5) selectedDayIdx = 0; // Wrap Sunday to Monday
+
+    let activeEditDayIdx = 0;
     let activeEditWorkout = null;
     let activeSessionWorkout = null;
     let sessionSetsState = [];
@@ -907,6 +983,7 @@
       renderWorkouts();
       renderPlan();
       renderInsights();
+      renderSettings();
       document.getElementById('unitBadge').innerText = settings.units;
     }
 
@@ -916,7 +993,6 @@
       const completed = currentDay.workouts.filter(w => w.done).length;
       const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
 
-      // SVG circumference = 2 * PI * 34 = 213.6
       const offset = 213.6 - (213.6 * (pct / 100));
       document.getElementById('progressRing').style.strokeDashoffset = offset;
       document.getElementById('progressPctText').innerText = `${pct}%`;
@@ -924,7 +1000,7 @@
       document.getElementById('currentDayFocusLabel').innerText = `${currentDay.name.toUpperCase()} DAY`;
       document.getElementById('sectionDayTitle').innerText = `${currentDay.name} Routine`;
       document.getElementById('sectionDayFocus').innerText = currentDay.focus;
-      
+
       const quote = total === 0 ? 'Recovery day. Move gently.' : (pct === 100 ? 'Routines completed! Great work.' : 'Keep your rhythm. You’ve got this.');
       document.getElementById('progressStatusQuote').innerText = quote;
     }
@@ -938,12 +1014,25 @@
         pill.className = `day-pill ${idx === selectedDayIdx ? 'active' : ''}`;
         pill.innerHTML = `<div class="lbl">${labels[idx]}</div><div class="num">${day.workouts.length}</div>`;
         pill.onclick = () => {
-          triggerHaptic('light');
           selectedDayIdx = idx;
           render();
         };
         container.appendChild(pill);
       });
+    }
+
+    function moveWorkout(dayIdx, workoutIdx, direction, e) {
+      e.stopPropagation();
+      const list = days[dayIdx].workouts;
+      const targetIdx = workoutIdx + direction;
+      if (targetIdx < 0 || targetIdx >= list.length) return;
+      const temp = list[workoutIdx];
+      list[workoutIdx] = list[targetIdx];
+      list[targetIdx] = temp;
+      saveState();
+      if (document.getElementById('planDayModal').classList.contains('open')) {
+        renderPlanDayModalWorkouts();
+      }
     }
 
     function renderWorkouts() {
@@ -956,16 +1045,20 @@
           <div class="glass-card" style="text-align: center; padding: 28px 16px;">
             <div style="font-size: 24px; margin-bottom: 6px;">☕</div>
             <div style="font-weight: 700;">Rest & Recharge</div>
-            <div style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">No movements planned. Hit + to add custom sets.</div>
+            <div style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">No movements scheduled. Tap + to add exercises.</div>
           </div>`;
         return;
       }
 
-      workouts.forEach((w) => {
+      workouts.forEach((w, idx) => {
         const card = document.createElement('div');
         card.className = 'glass-card workout-item';
         const typeColor = TYPE_COLORS[w.kind] || '#fff';
         card.innerHTML = `
+          <div class="order-controls">
+            <button class="reorder-btn" onclick="moveWorkout(${selectedDayIdx}, ${idx}, -1, event)">▲</button>
+            <button class="reorder-btn" onclick="moveWorkout(${selectedDayIdx}, ${idx}, 1, event)">▼</button>
+          </div>
           <div class="workout-meta">
             <div class="workout-name ${w.done ? 'done' : ''}">${w.name}</div>
             <div class="workout-sub">
@@ -973,20 +1066,17 @@
               <span>${w.sets} sets • ${w.reps} reps • ${w.rest}s</span>
             </div>
           </div>
-          <div class="checkbox ${w.done ? 'checked' : ''}" data-id="${w.id}">
+          <div class="checkbox ${w.done ? 'checked' : ''}">
             <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
         `;
 
-        // Checkbox click toggles completion
         card.querySelector('.checkbox').onclick = (e) => {
           e.stopPropagation();
-          triggerHaptic('light');
           w.done = !w.done;
           saveState();
         };
 
-        // Card body click opens active rest / session tracker
         card.onclick = () => openSessionModal(w);
 
         list.appendChild(card);
@@ -1002,17 +1092,18 @@
         item.style.display = 'flex';
         item.style.alignItems = 'center';
         item.style.justifyContent = 'space-between';
+        item.style.cursor = 'pointer';
         item.innerHTML = `
           <div>
             <div style="font-weight: 700; font-size: 15px;">${day.name}</div>
             <div style="font-size: 12px; color: var(--text-dim);">${day.focus}</div>
           </div>
-          <div style="font-size: 13px; font-weight: 700; color: var(--text-dim);">${day.workouts.length} sets</div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div style="font-size: 13px; font-weight: 700; color: var(--text-dim);">${day.workouts.length} exercises</div>
+            <div style="font-size: 16px; color: var(--text-dim);">›</div>
+          </div>
         `;
-        item.onclick = () => {
-          selectedDayIdx = idx;
-          switchTab('today');
-        };
+        item.onclick = () => openPlanDayModal(idx);
         container.appendChild(item);
       });
     }
@@ -1024,24 +1115,49 @@
       document.getElementById('activeDaysCount').innerText = days.filter(d => d.workouts.length > 0).length;
     }
 
-    // Tabs Router
+    function renderSettings() {
+      document.getElementById('settingProfileName').value = settings.name || '';
+      document.getElementById('settingProfileFocus').value = settings.focus || '';
+      document.getElementById('unitsSelect').value = settings.units || 'KG';
+    }
+
+    // Modal Background Tapping (Dismiss on click outside)
+    function setupBackdropDismiss(overlayId, modalSheetSelector, closeHandler) {
+      const overlay = document.getElementById(overlayId);
+      overlay.addEventListener('click', (e) => {
+        if (!e.target.closest(modalSheetSelector)) {
+          closeHandler();
+        }
+      });
+    }
+
+    setupBackdropDismiss('editorModal', '.modal-sheet', () => {
+      document.getElementById('editorModal').classList.remove('open');
+    });
+    setupBackdropDismiss('sessionModal', '.modal-sheet', () => {
+      clearInterval(restTimerInterval);
+      document.getElementById('sessionModal').classList.remove('open');
+    });
+    setupBackdropDismiss('planDayModal', '.modal-sheet', () => {
+      document.getElementById('planDayModal').classList.remove('open');
+    });
+
+    // Navigation Tabs Router
     function switchTab(tabId) {
-      triggerHaptic('light');
       document.querySelectorAll('.nav-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tabId));
       document.querySelectorAll('main').forEach(m => m.classList.add('hidden'));
       document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-      document.getElementById('fabAddBtn').style.display = (tabId === 'today' || tabId === 'plan') ? 'flex' : 'none';
+      document.getElementById('fabAddBtn').style.display = (tabId === 'today') ? 'flex' : 'none';
     }
 
     document.querySelectorAll('.nav-tab').forEach(tab => {
       tab.addEventListener('click', () => switchTab(tab.dataset.tab));
     });
 
-    // Session Stopwatch
+    // Stopwatch Controls
     const stopwatchDisplay = document.getElementById('stopwatchDisplay');
     const stopwatchToggleBtn = document.getElementById('stopwatchToggleBtn');
     document.getElementById('stopwatchToggleBtn').onclick = () => {
-      triggerHaptic('light');
       if (stopwatchRunning) {
         clearInterval(stopwatchTimer);
         stopwatchRunning = false;
@@ -1058,7 +1174,6 @@
       }
     };
     document.getElementById('stopwatchResetBtn').onclick = () => {
-      triggerHaptic('light');
       clearInterval(stopwatchTimer);
       stopwatchRunning = false;
       stopwatchSeconds = 0;
@@ -1066,10 +1181,9 @@
       stopwatchToggleBtn.innerText = 'Start';
     };
 
-    // Editor Modal Handling
+    // Editor Stepper Values
     let curSets = 3, curReps = 10, curRest = 90;
     window.stepVal = function(field, delta) {
-      triggerHaptic('light');
       if (field === 'Sets') curSets = Math.max(1, curSets + delta);
       if (field === 'Reps') curReps = Math.max(1, curReps + delta);
       if (field === 'Rest') curRest = Math.max(5, curRest + delta);
@@ -1078,17 +1192,31 @@
       document.getElementById('valRest').innerText = curRest;
     };
 
-    document.getElementById('fabAddBtn').onclick = () => {
-      activeEditWorkout = null;
-      document.getElementById('editorModalTitle').innerText = 'New Movement';
-      document.getElementById('editName').value = '';
-      document.getElementById('editDef').value = '';
-      curSets = 3; curReps = 10; curRest = 90;
-      stepVal('Sets', 0);
-      document.getElementById('deleteWorkoutBtn').classList.add('hidden');
-      document.getElementById('editorModal').classList.add('open');
-    };
+    function openWorkoutEditor(workout = null, dayIdx = selectedDayIdx) {
+      activeEditWorkout = workout;
+      activeEditDayIdx = dayIdx;
 
+      if (workout) {
+        document.getElementById('editorModalTitle').innerText = 'Edit Movement';
+        document.getElementById('editName').value = workout.name;
+        document.getElementById('editDef').value = workout.definition || '';
+        document.getElementById('editKind').value = workout.kind || 'chest';
+        curSets = workout.sets; curReps = workout.reps; curRest = workout.rest;
+        document.getElementById('deleteWorkoutBtn').classList.remove('hidden');
+      } else {
+        document.getElementById('editorModalTitle').innerText = 'New Movement';
+        document.getElementById('editName').value = '';
+        document.getElementById('editDef').value = '';
+        document.getElementById('editKind').value = 'chest';
+        curSets = 3; curReps = 10; curRest = 90;
+        document.getElementById('deleteWorkoutBtn').classList.add('hidden');
+      }
+
+      stepVal('Sets', 0);
+      document.getElementById('editorModal').classList.add('open');
+    }
+
+    document.getElementById('fabAddBtn').onclick = () => openWorkoutEditor(null, selectedDayIdx);
     document.getElementById('closeEditorBtn').onclick = () => {
       document.getElementById('editorModal').classList.remove('open');
     };
@@ -1097,56 +1225,60 @@
       const name = document.getElementById('editName').value.trim();
       if (!name) return;
       const def = document.getElementById('editDef').value.trim();
-      
-      // Basic classifier fallback
-      let kind = 'chest';
-      const text = `${name} ${def}`.toLowerCase();
-      if (text.includes('squat') || text.includes('leg') || text.includes('lunge')) kind = 'legs';
-      else if (text.includes('pull') || text.includes('row') || text.includes('back')) kind = 'back';
-      else if (text.includes('press') || text.includes('shoulder') || text.includes('delt')) kind = 'shoulders';
-      else if (text.includes('curl') || text.includes('arm')) kind = 'arms';
-      else if (text.includes('crunch') || text.includes('core') || text.includes('plank')) kind = 'core';
+      const kind = document.getElementById('editKind').value;
 
       if (activeEditWorkout) {
         activeEditWorkout.name = name;
         activeEditWorkout.definition = def;
+        activeEditWorkout.kind = kind;
         activeEditWorkout.sets = curSets;
         activeEditWorkout.reps = curReps;
         activeEditWorkout.rest = curRest;
-        activeEditWorkout.kind = kind;
       } else {
-        days[selectedDayIdx].workouts.push({
+        days[activeEditDayIdx].workouts.push({
           id: String(Date.now()),
           name, definition: def, kind,
           sets: curSets, reps: curReps, rest: curRest, done: false
         });
       }
+
       saveState();
       document.getElementById('editorModal').classList.remove('open');
+      if (document.getElementById('planDayModal').classList.contains('open')) {
+        renderPlanDayModalWorkouts();
+      }
     };
 
     document.getElementById('deleteWorkoutBtn').onclick = () => {
       if (!activeEditWorkout) return;
-      days[selectedDayIdx].workouts = days[selectedDayIdx].workouts.filter(w => w.id !== activeEditWorkout.id);
+      days[activeEditDayIdx].workouts = days[activeEditDayIdx].workouts.filter(w => w.id !== activeEditWorkout.id);
       saveState();
       document.getElementById('editorModal').classList.remove('open');
+      if (document.getElementById('planDayModal').classList.contains('open')) {
+        renderPlanDayModalWorkouts();
+      }
     };
 
-    // Live Workout Session & Rest Timer
+    // Live Workout Session & Rest Countdown
     function openSessionModal(workout) {
       activeSessionWorkout = workout;
       document.getElementById('sessionWorkoutTitle').innerText = workout.name;
       document.getElementById('sessionWorkoutSub').innerText = `${workout.sets} sets • ${workout.reps} reps • ${workout.rest}s rest`;
-      
+
       sessionSetsState = Array(workout.sets).fill(false);
       renderSessionChips();
-      
+
       restRemaining = workout.rest;
       document.getElementById('restTimerDisplay').innerText = `${restRemaining}s`;
       document.getElementById('restRing').style.strokeDashoffset = 0;
 
       document.getElementById('sessionModal').classList.add('open');
     }
+
+    document.getElementById('editFromSessionBtn').onclick = () => {
+      document.getElementById('sessionModal').classList.remove('open');
+      openWorkoutEditor(activeSessionWorkout, selectedDayIdx);
+    };
 
     function renderSessionChips() {
       const container = document.getElementById('sessionSetChips');
@@ -1156,7 +1288,6 @@
         chip.className = `set-chip ${done ? 'completed' : ''}`;
         chip.innerText = `Set ${i + 1} ${done ? '✓' : ''}`;
         chip.onclick = () => {
-          triggerHaptic('light');
           sessionSetsState[i] = !sessionSetsState[i];
           renderSessionChips();
           if (sessionSetsState[i]) startRestCountdown();
@@ -1170,8 +1301,7 @@
       restRemaining = activeSessionWorkout.rest;
       const totalRest = activeSessionWorkout.rest;
       const ring = document.getElementById('restRing');
-      
-      // Circumference = 2 * PI * 66 = 414.7
+
       restTimerInterval = setInterval(() => {
         restRemaining--;
         document.getElementById('restTimerDisplay').innerText = `${restRemaining}s`;
@@ -1180,7 +1310,6 @@
 
         if (restRemaining <= 0) {
           clearInterval(restTimerInterval);
-          triggerHaptic('heavy');
           playBeep();
         }
       }, 1000);
@@ -1201,22 +1330,100 @@
     };
 
     document.getElementById('resetDayBtn').onclick = () => {
-      triggerHaptic('light');
       days[selectedDayIdx].workouts.forEach(w => w.done = false);
       saveState();
     };
 
-    // Settings Listeners
-    document.getElementById('hapticsToggle').onchange = (e) => {
-      settings.haptics = e.target.checked;
+    // Day Plan Customizer
+    let currentEditingPlanDayIndex = 0;
+    function openPlanDayModal(idx) {
+      currentEditingPlanDayIndex = idx;
+      const day = days[idx];
+      document.getElementById('planDayName').value = day.name;
+      document.getElementById('planDayFocus').value = day.focus;
+      renderPlanDayModalWorkouts();
+      document.getElementById('planDayModal').classList.add('open');
+    }
+
+    function renderPlanDayModalWorkouts() {
+      const container = document.getElementById('planDayWorkoutsList');
+      container.innerHTML = '';
+      const workouts = days[currentEditingPlanDayIndex].workouts;
+
+      if (workouts.length === 0) {
+        container.innerHTML = `<div style="font-size:12px; color:var(--text-dim); text-align:center; padding:12px;">No exercises in this split yet.</div>`;
+        return;
+      }
+
+      workouts.forEach((w, wIdx) => {
+        const row = document.createElement('div');
+        row.style.display = 'flex';
+        row.style.alignItems = 'center';
+        row.style.justifyContent = 'space-between';
+        row.style.padding = '8px 10px';
+        row.style.background = 'rgba(255,255,255,0.03)';
+        row.style.border = '1px solid rgba(255,255,255,0.06)';
+        row.style.borderRadius = '10px';
+        row.style.marginBottom = '6px';
+        row.innerHTML = `
+          <div class="order-controls" style="margin-right:8px;">
+            <button class="reorder-btn" onclick="moveWorkout(${currentEditingPlanDayIndex}, ${wIdx}, -1, event)">▲</button>
+            <button class="reorder-btn" onclick="moveWorkout(${currentEditingPlanDayIndex}, ${wIdx}, 1, event)">▼</button>
+          </div>
+          <div style="flex:1; cursor:pointer;" onclick="openWorkoutEditor(days[${currentEditingPlanDayIndex}].workouts[${wIdx}], ${currentEditingPlanDayIndex})">
+            <div style="font-size:14px; font-weight:700;">${w.name}</div>
+            <div style="font-size:11px; color:var(--text-dim);">${w.sets} sets • ${w.reps} reps • ${w.rest}s</div>
+          </div>
+          <button style="background:none; border:none; color:#ff5252; font-size:16px; cursor:pointer; padding:6px;" onclick="removeWorkoutFromPlan(${wIdx})">✕</button>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    window.removeWorkoutFromPlan = function(wIdx) {
+      days[currentEditingPlanDayIndex].workouts.splice(wIdx, 1);
       saveState();
+      renderPlanDayModalWorkouts();
     };
+
+    document.getElementById('planDayAddWorkoutBtn').onclick = () => {
+      openWorkoutEditor(null, currentEditingPlanDayIndex);
+    };
+
+    document.getElementById('savePlanDayBtn').onclick = () => {
+      const name = document.getElementById('planDayName').value.trim();
+      const focus = document.getElementById('planDayFocus').value.trim();
+      if (name) days[currentEditingPlanDayIndex].name = name;
+      if (focus) days[currentEditingPlanDayIndex].focus = focus;
+      saveState();
+      document.getElementById('planDayModal').classList.remove('open');
+    };
+
+    document.getElementById('closePlanDayBtn').onclick = () => {
+      document.getElementById('planDayModal').classList.remove('open');
+    };
+
+    // Settings Listeners
+    document.getElementById('saveProfileBtn').onclick = () => {
+      settings.name = document.getElementById('settingProfileName').value.trim() || 'Alex Morgan';
+      settings.focus = document.getElementById('settingProfileFocus').value.trim() || 'Strength';
+      saveState();
+      alert('Profile saved.');
+    };
+
     document.getElementById('unitsSelect').onchange = (e) => {
       settings.units = e.target.value;
       saveState();
     };
 
-    // Initialize
+    document.getElementById('factoryResetBtn').onclick = () => {
+      if (confirm('Reset all workout splits back to default? All customizations will be reset.')) {
+        days = JSON.parse(JSON.stringify(DEFAULT_DAYS));
+        saveState();
+      }
+    };
+
+    // Initial load
     render();
   </script>
 </body>
