@@ -1422,7 +1422,9 @@
     function setupBackdropDismiss(overlayId, modalSheetSelector, closeHandler) {
       const overlay = document.getElementById(overlayId);
       overlay.addEventListener('click', (e) => {
-        if (!e.target.closest(modalSheetSelector)) closeHandler();
+        if (e.target === overlay) {
+            closeHnadler();
+        }
       });
     }
 
@@ -1585,7 +1587,7 @@
             <input type="number" class="weight-input" value="${setData.weight}" onchange="updateSetWeight(${i}, this.value)" />
             <span style="font-size: 11px; font-weight:700; color:var(--text-dim);">${settings.units}</span>
           </div>
-          <button class="set-check-btn ${setData.done ? 'done' : ''}" onclick="toggleSetDone(${i})">✓</button>
+          <button class="set-check-btn ${setData.done ? 'done' : ''}" onclick="toggleSetDone(${i}, event)">✓</button>
         `;
         container.appendChild(row);
       });
@@ -1597,6 +1599,7 @@
     };
 
     window.toggleSetDone = function(idx) {
+      if (e) e.stopPropagation();
       sessionSetsData[idx].done = !sessionSetsData[idx].done;
       renderSessionSetsTable();
 
